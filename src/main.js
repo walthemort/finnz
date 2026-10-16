@@ -51,6 +51,18 @@ document.querySelector('#app').innerHTML = `
         <a class="phone-link" id="contact-phone">${arrow}</a>
         <span class="email-placeholder">E-mail kommer snart</span>
       </div>
+      <details class="contact-form-panel">
+        <summary>Skriv om din idé <span aria-hidden="true">+</span></summary>
+        <form id="contact-form">
+          <div class="form-fields">
+            <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
+            <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
+          </div>
+          <label>Hvad har du i tankerne?<textarea name="message" rows="4" minlength="10" maxlength="4000" required placeholder="Fortæl lidt om din idé …"></textarea></label>
+          <div class="form-actions"><p>${contactEmail ? 'Du gennemser og sender selv beskeden i din mailapp.' : 'E-mailadressen er på vej. Du kan klargøre din besked her; den bliver ikke sendt.'}</p><button type="submit" class="form-submit">${contactEmail ? 'Åbn som e-mail' : 'Klargør besked'} ${arrow}</button></div>
+          <div class="form-result" hidden><p role="status"></p><textarea rows="6" readonly aria-label="Din klargjorte besked"></textarea><button type="button" class="text-link" id="copy-message">Kopiér beskeden ${arrow}</button></div>
+        </form>
+      </details>
     </section>
   </main>
   <footer class="footer">
@@ -137,10 +149,84 @@ const hideCursor = () => document.documentElement.classList.remove('has-brand-cu
 window.addEventListener('pointermove', event => {
   if (!cursorMedia.matches || event.pointerType !== 'mouse' || !cursorImage.complete || !cursorImage.naturalWidth) return hideCursor();
   cursor.style.transform = `translate3d(${event.clientX - 3}px, ${event.clientY - 3}px, 0)`;
-  cursor.classList.toggle('is-link', Boolean(event.target.closest('a, button')));
+  const isTextInput = Boolean(event.target.closest('input, textarea'));
+  if (isTextInput) return hideCursor();
+  cursor.classList.toggle('is-link', Boolean(event.target.closest('a, button, summary')));
   document.documentElement.classList.add('has-brand-cursor');
 }, { passive: true });
 document.documentElement.addEventListener('pointerleave', hideCursor);
 window.addEventListener('blur', hideCursor);
 cursorMedia.addEventListener('change', hideCursor);
 document.addEventListener('keydown', event => { if (event.key === 'Tab') hideCursor(); });
+
+// Prepare an email draft; never claim that a message was sent from this static site.
+const contactForm = document.querySelector('#contact-form');
+const result = contactForm.querySelector('.form-result');
+const copyMessage = document.querySelector('#copy-message');
+let messageText = '';
+contactForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const data = new FormData(contactForm);
+  const name = contactForm.elements.namedItem('name');
+  const message = contactForm.elements.namedItem('message');
+  name.setCustomValidity(String(data.get('name')).trim() ? '' : 'Skriv dit navn.');
+  message.setCustomValidity(String(data.get('message')).trim().length >= 10 ? '' : 'Fortæl lidt mere om din idé (mindst 10 tegn).');
+  if (!contactForm.reportValidity()) return;
+  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
+  result.hidden = false;
+  result.querySelector('textarea').value = messageText;
+  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
+  result.querySelector('[role="status"]').textContent = contactEmail
+    ? 'Din besked er klar i din mailapp. Send den derfra, eller kopiér teksten her.'
+    : 'Din besked er klar, men er ikke sendt. Du kan kopiere den her.';
+  if (contactEmail) {
+    const emailLink = document.createElement('a');
+    emailLink.href = `mailto:${contactEmail}?subject=${encodeURIComponent('En idé i træ — ' + data.get('name'))}&body=${encodeURIComponent(messageText)}`;
+    emailLink.click();
+  }
+});
+copyMessage.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(messageText);
+    copyMessage.textContent = 'Besked kopieret ✓';
+  } catch {
+    const text = result.querySelector('textarea');
+    text.focus(); text.select();
+    result.querySelector('[role="status"]').textContent = 'Markér teksten og kopiér den med Ctrl+C eller Cmd+C.';
+  }
+});
+contactForm.addEventListener('input', event => {
+  if (event.target.setCustomValidity) event.target.setCustomValidity('');
+  result.hidden = true;
+  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
+});
+
+// A first-visit intro follows actual readiness, never an artificial loading percentage.
+function startIntro() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  try { if (sessionStorage.getItem('finnz-intro-seen')) return; } catch { /* Storage is optional. */ }
+  const intro = document.createElement('div');
+  intro.className = 'site-intro';
+  intro.setAttribute('aria-hidden', 'true');
+  intro.innerHTML = `${brand}<span class="intro-rule"></span><span class="eyebrow">TRÆ & DESIGN</span>`;
+  document.body.append(intro);
+  document.documentElement.classList.add('is-intro');
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    document.documentElement.classList.remove('is-intro');
+    intro.classList.add('is-ready');
+    try { sessionStorage.setItem('finnz-intro-seen', '1'); } catch { /* Storage is optional. */ }
+    window.removeEventListener('pointerdown', finish);
+    window.removeEventListener('keydown', finish);
+    setTimeout(() => intro.remove(), 550);
+  };
+  window.addEventListener('pointerdown', finish, { once: true });
+  window.addEventListener('keydown', finish, { once: true });
+  const images = [document.querySelector('.hero-image'), intro.querySelector('img')];
+  const ready = Promise.allSettled([document.fonts.ready, ...images.map(image => image.decode())]);
+  const deadline = new Promise(resolve => setTimeout(resolve, 2200));
+  Promise.race([ready, deadline]).then(finish);
+}
+startIntro();
