@@ -8,7 +8,7 @@ import { createProjectMotion } from './project-motion.js';
 import { materialSelectorMarkup, setupMaterialSelector } from './materials.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
-const brand = '<img class="brand-logo" src="/brand/logo-black.webp" alt="Finnz" width="925" height="331">';
+const brand = '<img class="brand-logo" src="/brand/logo-dark.webp" alt="Finnz" width="925" height="331">';
 const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || '';
 const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 
