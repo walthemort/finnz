@@ -61,9 +61,10 @@ svg { width: 20px; height: 20px; flex-shrink: 0; }
 .eyebrow { font-size: 9px; letter-spacing: 1.6px; font-weight: 500; }
 .hero .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #69795d; }
-h1 { font-size: clamp(58px, 7.25vw, 116px); line-height: 1.08; letter-spacing: -.06em; }
+h1 { display: flex; flex-direction: column; font-size: clamp(58px, 7.25vw, 116px); line-height: 1.08; letter-spacing: -.06em; }
 h1 em { letter-spacing: -.055em; }
-.title-line { display: block; overflow: hidden; padding-bottom: 9px; }
+/* Give the reveal mask room for ascenders and descenders without adding line spacing. */
+.title-line { display: block; overflow: hidden; padding-block: .25em; margin-top: -.25em; margin-bottom: calc(9px - .25em); }
 .title-line > span { display: block; animation: title-in 1.15s cubic-bezier(.2,.7,.2,1) both; }
 .title-line:nth-child(2) > span { animation-delay: .13s; }
 .hero-description { margin-top: 24px; font-size: 13px; line-height: 1.8; color: var(--muted); }
@@ -123,7 +124,7 @@ figcaption { text-align: right; font-size: 8px; color: var(--muted); margin-top:
   .eyebrow { font-size: 7px; letter-spacing: 1.25px; }
   .hero .eyebrow { margin-bottom: 25px; }
   h1 { font-size: 8.2vw; line-height: 1.16; letter-spacing: -.055em; }
-  .title-line { padding-bottom: 7px; }
+  .title-line { margin-bottom: calc(7px - .25em); }
   .hero-description { font-size: 11px; margin-top: 20px; }
   .hero-image-section { margin-inline: 10px; }
   .hero-image-wrap { height: 390px; }
