@@ -27,7 +27,7 @@ Telefonnummeret er +45 41 35 20 25. Kopiér `.env.example` til `.env.local`, hvi
 
 Genstart udviklingsserveren efter ændringer i miljøvariabler. Kør et nyt build efter ændringer før publicering. VITE-variabler er offentlige klientværdier og må aldrig indeholde hemmeligheder.
 
-Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. Kontaktformularen ligger i en sammenklappelig sektion, så siden stadig er kort. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Inspirationskort åbner en fuldskærmsside med to billeder, tekst, materialefakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og thumbnails; på mobil kan projektrækken swipes.
+Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. Kontaktformularen er altid synlig i kontaktsektionen. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Inspirationskort åbner en fuldskærmsside med to billeder, tekst, materialefakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og thumbnails; på mobil kan projektrækken swipes.
 
 ## Indhold og billeder
 
@@ -39,16 +39,22 @@ Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil
 - Den korte præsentationstekst er foreløbig og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
 - Ingen CVR, adresse, priser eller kundereferencer er opfundet.
 
+## Materialevælger
+
+`src/materials.js` indeholder tre vejledende materialer: eg, valnød og ask. Alle visninger bruger samme bord og rum, med genererede variationer i bordets træsort. Farver, træsorter og overflader er inspiration, ikke bekræftet sortiment eller en nøjagtig farveprøve. Overfladeønsket ændrer ikke visualiseringen, som illustrerer træsorten.
+
+Der er intet forudvalgt materiale; startbilledet er et eksempel i eg. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Materiale og overflade vises i formularen og indgår i både den kopierede besked og en e-mailkladde. Ændret materialevalg skjuler en tidligere klargjort besked, så den ikke kan kopieres med forældede valg. Valgene gemmes kun i den aktuelle sides hukommelse; navn, e-mail, besked og projektreference bevares ved materialeskift.
+
 ## Intro
 
 Introen ligger direkte i HTML og vises ved hver indlæsning, også ved genindlæsning med cached billeder og fonte. Logoet vises mindst 1,1 sekund, før det fader ud. Ved reduceret bevægelse vises en statisk udgave i mindst 0,35 sekund. Parathed af hovedbillede og fonte kan forlænge visningen til højst 2,2 sekunder plus udtoning. Ingen session storage eller falsk procenttæller bruges. Tastatur eller klik afslutter straks introen. En separat HTML-sikring fjerner overlayet efter 5 sekunder, hvis JavaScript-modulet fejler.
 
 ## Projektvisning
 
-Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver altid adgang til lukning; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktformularen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
+Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver altid adgang til lukning; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” går til den synlige kontaktformular og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
 
 ## Kontrol
 
-Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale WebP-logoer, faviconets billedproportioner ved 16/32/64 px, introens parathed/timeout/genbesøg/reduceret bevægelse, formularens validering og kopiering, mus/touch/reduced-motion cursor, galleriets knapper, tastatur og Escape, mobilrækkens swipe samt billedindlæsning og vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
+Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale WebP-logoer, faviconets billedproportioner ved 16/32/64 px, introens parathed/timeout/genbesøg/reduceret bevægelse, formularens synlighed, validering og kopiering samt materialevalg, nulstilling og overførsel til beskeden, mus/touch/reduced-motion cursor, galleriets knapper, tastatur og Escape, mobilrækkens swipe samt billedindlæsning og vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
 
 Hjemmesiden er ikke publiceret.

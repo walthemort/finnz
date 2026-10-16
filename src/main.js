@@ -4,6 +4,7 @@ import '@fontsource/manrope/latin-600.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import './style.css';
 import { projects } from './projects.js';
+import { materialSelectorMarkup, setupMaterialSelector } from './materials.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
 const brand = '<img class="brand-logo" src="/brand/logo-black.webp" alt="Finnz" width="925" height="331">';
@@ -13,7 +14,7 @@ const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 document.querySelector('#app').innerHTML = `
   <header class="header" id="top">
     <a class="brand" href="#top" aria-label="Finnz Træ & Design, til toppen">${brand}</a>
-    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a class="text-link" href="#kontakt">Lad os tale sammen ${arrow}</a></nav>
+    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><a class="text-link" href="#kontakt">Lad os tale sammen ${arrow}</a></nav>
   </header>
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
@@ -38,6 +39,7 @@ document.querySelector('#app').innerHTML = `
       </div>
       <p class="project-note">Billederne er stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
     </section>
+    ${materialSelectorMarkup(arrow)}
     <section class="contact reveal" id="kontakt" aria-labelledby="contact-title">
       <div>
         <p class="eyebrow">LAD OS SKABE NOGET SAMMEN</p>
@@ -48,9 +50,10 @@ document.querySelector('#app').innerHTML = `
         <a class="phone-link" id="contact-phone">${arrow}</a>
         <span class="email-placeholder">E-mail kommer snart</span>
       </div>
-      <details class="contact-form-panel">
-        <summary>Skriv om din idé <span aria-hidden="true">+</span></summary>
-        <form id="contact-form">
+      <div class="contact-form-panel">
+        <div class="form-heading"><h3 id="form-title">Skriv til Finnz.</h3><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p></div>
+        <form id="contact-form" aria-labelledby="form-title">
+          <div class="form-material"><span class="eyebrow">DIT MATERIALEØNSKE</span><div><span id="material-summary">Vi finder materiale og overflade sammen.</span><a href="#materialer">Tilpas ↗</a></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
           <div class="form-fields">
             <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
             <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
@@ -59,7 +62,7 @@ document.querySelector('#app').innerHTML = `
           <div class="form-actions"><p>${contactEmail ? 'Du gennemser og sender selv beskeden i din mailapp.' : 'E-mailadressen er på vej. Du kan klargøre din besked her; den bliver ikke sendt.'}</p><button type="submit" class="form-submit">${contactEmail ? 'Åbn som e-mail' : 'Klargør besked'} ${arrow}</button></div>
           <div class="form-result" hidden><p role="status"></p><textarea rows="6" readonly aria-label="Din klargjorte besked"></textarea><button type="button" class="text-link" id="copy-message">Kopiér beskeden ${arrow}</button></div>
         </form>
-      </details>
+      </div>
     </section>
   </main>
   <footer class="footer">
@@ -186,9 +189,7 @@ gallery.addEventListener('close', () => {
   document.body.append(cursor);
   if (!contactRequested) return;
   contactRequested = false;
-  const panel = document.querySelector('.contact-form-panel');
   const message = document.querySelector('[name="message"]');
-  panel.open = true;
   if (!message.value.trim()) {
     message.value = `Jeg er inspireret af “${projects[projectIndex].title}” og vil gerne høre om en lignende løsning.\n\nMin idé: `;
     message.dispatchEvent(new Event('input', { bubbles: true }));
@@ -214,7 +215,7 @@ const hideCursor = () => document.documentElement.classList.remove('has-brand-cu
 window.addEventListener('pointermove', event => {
   if (!cursorMedia.matches || event.pointerType !== 'mouse' || !cursorImage.complete || !cursorImage.naturalWidth) return hideCursor();
   cursor.style.transform = `translate3d(${event.clientX - 3}px, ${event.clientY - 3}px, 0)`;
-  const isTextInput = Boolean(event.target.closest('input, textarea'));
+  const isTextInput = Boolean(event.target.closest('input, textarea, select'));
   if (isTextInput) return hideCursor();
   cursor.classList.toggle('is-link', Boolean(event.target.closest('a, button, summary')));
   document.documentElement.classList.add('has-brand-cursor');
@@ -237,7 +238,7 @@ contactForm.addEventListener('submit', event => {
   name.setCustomValidity(String(data.get('name')).trim() ? '' : 'Skriv dit navn.');
   message.setCustomValidity(String(data.get('message')).trim().length >= 10 ? '' : 'Fortæl lidt mere om din idé (mindst 10 tegn).');
   if (!contactForm.reportValidity()) return;
-  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
+  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nMaterialeønske: ${data.get('material')}\nOverfladeønske: ${data.get('finish')}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
   result.hidden = false;
   result.querySelector('textarea').value = messageText;
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
@@ -262,6 +263,16 @@ copyMessage.addEventListener('click', async () => {
 });
 contactForm.addEventListener('input', event => {
   if (event.target.setCustomValidity) event.target.setCustomValidity('');
+  result.hidden = true;
+  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
+});
+
+setupMaterialSelector(({ material, finish }) => {
+  contactForm.elements.namedItem('material').value = material;
+  contactForm.elements.namedItem('finish').value = finish;
+  document.querySelector('#material-summary').textContent = material === 'Afklares sammen' && finish === 'Afklares sammen'
+    ? 'Vi finder materiale og overflade sammen.'
+    : `${material === 'Afklares sammen' ? 'Træsort afklares sammen' : material} · ${finish === 'Afklares sammen' ? 'Overflade afklares sammen' : finish}`;
   result.hidden = true;
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
 });
