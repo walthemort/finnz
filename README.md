@@ -42,9 +42,9 @@ Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil
 
 ## Materialevælger
 
-`src/materials.js` indeholder tre vejledende materialer: eg, valnød og ask. Alle visninger bruger samme bord og rum, med genererede variationer i bordets træsort. Farver, træsorter og overflader er inspiration, ikke bekræftet sortiment eller en nøjagtig farveprøve. Overfladeønsket ændrer ikke visualiseringen, som illustrerer træsorten.
+`src/materials.js` indeholder tre vejledende udendørs materialer: fyr, lærk og thermotræ. Alle visninger bygger på brugerens foto af en træafskærmning omkring affaldsbeholdere. AI-visualiseringerne i `public/images/materials/` viser samme motiv med forskellige træudtryk i kvadratisk format uden beskæring. De beskriver ikke det oprindelige projekts faktiske træsort eller et bekræftet sortiment. Træsort, kvalitet, farve og behandling aftales til den konkrete løsning. Overfladeønskerne er “Afklares sammen”, “Ubehandlet”, “Olieret” og “Træbeskyttelse”; valget ændrer ikke billedet.
 
-Der er intet forudvalgt materiale; startbilledet er et eksempel i eg. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Materiale og overflade vises i formularen og indgår i både den kopierede besked og en e-mailkladde. Ændret materialevalg skjuler en tidligere klargjort besked, så den ikke kan kopieres med forældede valg. Valgene gemmes kun i den aktuelle sides hukommelse; navn, e-mail, besked og projektreference bevares ved materialeskift.
+Der er intet forudvalgt materiale; startbilledet viser lyst træ. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Materiale og overflade vises i formularen og indgår i både den kopierede besked og en e-mailkladde. Ændret materialevalg skjuler en tidligere klargjort besked, så den ikke kan kopieres med forældede valg. Valgene gemmes kun i den aktuelle sides hukommelse; navn, e-mail, besked og projektreference bevares ved materialeskift.
 
 ## Intro
 

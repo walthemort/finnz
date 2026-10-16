@@ -1,21 +1,21 @@
 export const materials = [
-  { id: 'eg', name: 'Eg', image: '/images/table-room.webp', color: '#b99667', description: 'Varmt, naturligt og med tydelig struktur. Et roligt udgangspunkt med masser af karakter.' },
-  { id: 'valnoed', name: 'Valnød', image: '/images/material-walnut.webp', color: '#68492f', description: 'Dybe, brune nuancer og et varmt udtryk. Til dig, der gerne vil give træet lidt mere tyngde i rummet.' },
-  { id: 'ask', name: 'Ask', image: '/images/material-ash.webp', color: '#d7c5a2', description: 'Lyse nuancer og levende årer. Et let udtryk, der giver plads til lys og luft.' },
+  { id: 'fyr', name: 'Fyr', image: '/images/materials/enclosure-pine.webp', color: '#d7c4a0', description: 'Et lyst og naturligt udtryk med synlige knaster. Vi aftaler træets kvalitet og behandling til din løsning.' },
+  { id: 'laerk', name: 'Lærk', image: '/images/materials/enclosure-larch.webp', color: '#bb9366', description: 'Varme, gyldne nuancer og tydelig struktur. Et eksempel på, hvordan afskærmningen kan få mere glød.' },
+  { id: 'thermotrae', name: 'Thermotræ', image: '/images/materials/enclosure-thermo.webp', color: '#79563d', description: 'Et dybere, brunt udtryk fra varmebehandlet træ. Den konkrete træsort og vedligeholdelse finder vi sammen.' },
 ];
-export const finishes = ['Afklares sammen', 'Mat olieret', 'Lakeret'];
+export const finishes = ['Afklares sammen', 'Ubehandlet', 'Olieret', 'Træbeskyttelse'];
 
 export function materialSelectorMarkup(arrow) {
   return `<section class="materials reveal" id="materialer" aria-labelledby="materials-title">
     <div class="materials-heading"><p class="eyebrow">MATERIALEINSPIRATION</p><h2 id="materials-title">Find dit <em>udtryk.</em></h2></div>
     <div class="material-layout">
-      <figure class="material-preview"><img id="material-image" src="/images/table-room.webp" alt="Materialeinspiration: et bord i lys eg" width="1536" height="1024" loading="lazy"><figcaption id="material-caption">Eksempel i eg</figcaption></figure>
+      <figure class="material-preview"><img id="material-image" src="${materials[0].image}" alt="Materialeinspiration: træafskærmning omkring affaldsbeholdere i lyst træ" width="1024" height="1024" loading="lazy"><figcaption id="material-caption">Lyst træ · visualiseret eksempel</figcaption></figure>
       <div class="material-controls">
         <fieldset class="wood-options"><legend>Hvilken træsort taler til dig?</legend><div class="wood-swatches">${materials.map(material => `<label class="wood-option"><input type="radio" name="wood" value="${material.id}"><span class="wood-swatch" style="--wood-color:${material.color}" aria-hidden="true"></span><span>${material.name}</span></label>`).join('')}</div></fieldset>
-        <p class="material-description" aria-live="polite">Prøv en træsort, og se, hvordan udtrykket ændrer sig.</p>
+        <p class="material-description" aria-live="polite">Prøv forskellige træudtryk til en afskærmning i haven.</p>
         <label class="finish-label" for="material-finish">Overfladeønske<select id="material-finish">${finishes.map(finish => `<option>${finish}</option>`).join('')}</select></label>
         <div class="material-actions"><button class="text-link material-apply" type="button" aria-haspopup="dialog">Tal med os om dit valg ${arrow}</button><button class="material-reset" type="button">Jeg vælger senere</button></div>
-        <p class="material-note">Vejledende visualiseringer. Træsort, farve og overflade aftales individuelt.</p>
+        <p class="material-note">AI-visualiseringer baseret på et projektfoto. Træsort, farve og behandling er vejledende og aftales til din udendørs løsning. Overfladeønsket ændrer ikke billedet.</p>
       </div>
     </div>
   </section>`;
@@ -35,7 +35,7 @@ export function setupMaterialSelector(onChange, onContact) {
     input.addEventListener('change', () => {
       selected = materials.find(material => material.id === input.value);
       preview.src = selected.image;
-      preview.alt = `Materialeinspiration: et bord i ${selected.name.toLowerCase()}`;
+      preview.alt = `Materialeinspiration: træafskærmning omkring affaldsbeholdere, visualiseret i ${selected.name.toLowerCase()}`;
       caption.textContent = `${selected.name} · materialeinspiration`;
       description.textContent = selected.description;
       update();
@@ -50,8 +50,8 @@ export function setupMaterialSelector(onChange, onContact) {
     section.querySelectorAll('[name="wood"]').forEach(input => { input.checked = false; });
     finish.value = finishes[0];
     preview.src = materials[0].image;
-    preview.alt = 'Materialeinspiration: et bord i lys eg';
-    caption.textContent = 'Eksempel i eg';
+    preview.alt = 'Materialeinspiration: træafskærmning omkring affaldsbeholdere i lyst træ';
+    caption.textContent = 'Lyst træ · visualiseret eksempel';
     description.textContent = 'Du behøver ikke vælge nu. Vi finder materialet sammen.';
     update();
   });
