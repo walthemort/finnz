@@ -1,6 +1,6 @@
 # Finnz Træ & Design
 
-En kort, dansk præsentationsside med ét hovedbudskab, et hovedbillede af håndværk, en kompakt projektrække og direkte kontakt. Bygget med Vite og almindelig JavaScript/CSS.
+En kort, dansk præsentationsside med ét hovedbudskab, et hovedbillede af træarkitektur, en kompakt projektrække og direkte kontakt. Bygget med Vite og almindelig JavaScript/CSS.
 
 ## Lokal udvikling
 
@@ -35,16 +35,17 @@ Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil
 - Header og footer bruger den originale `logo-black.webp` fra brugerens ZIP, så logoteksten ikke afhænger af en installeret font. Desktopcursor bruger `mark-outlined.webp` (ZIP-filens `Asset 12.webp`) med brugerens hvide kant. Favicon er en kvadratisk SVG-wrapper med det samme WebP-billede indlejret og `preserveAspectRatio="xMidYMid meet"`; billedet strækkes ikke. Regenerér wrapperen med `node scripts/generate-favicon.mjs`, hvis originalikonet udskiftes. Originalbilledets bytes er uændrede.
 - De gamle SVG-wordmarks indeholder stadig `<text>` med `font-family: Amboy-Black`. Derfor kræver de Amboy-fonten; en SVG med korrekt outlined tekst har bogstavernes geometri som paths. Brug `Type → Create Outlines` i Illustrator, eksportér en ny SVG og kontrollér selve eksporten, før der skiftes tilbage til SVG.
 - `src/projects.js` indeholder nu to udførte Finnz-projekter fra brugerens fotos: et mørkt havehus og en terrasse med træafskærmning. Hvert projekt har tre AI-redigerede billeder i `public/images/projects/01/` og `02/`, optimeret til WebP. Siden oplyser, at fotografierne er AI-redigerede; de skal ikke bruges som præcis dokumentation for farver eller konstruktionsdetaljer. Tekster beskriver kun det synlige arbejde uden at opfinde træsort, mål, sted eller kunde. PNG-pakkerne kan hentes fra `downloads/finnz-projekt-01.zip` og `downloads/finnz-projekt-02.zip`. Materialevælgeren bruger fortsat tydeligt mærkede, genererede stemningsvisualiseringer.
-- Billeder fra det gamle site: hovedbilledet `public/images/editorial/workshop.webp` stammer fra `pexels-ono-kosuki-5974239.jpg`, og trælamellerne i kontaktvinduet (`timber.webp`) fra `hello-world-featured.jpg` i brugerens ZIP. Begge har fået en varmere, afdæmpet farvebehandling med AI og er mærket som stemningsfotos. De er ikke projektfotos eller dokumentation for Finnz-medarbejdere. Det ekstra detaljebillede vises kun i kontaktvinduets desktoplayout, så mobilformularen forbliver enkel. PNG-udgaver ligger i `downloads/finnz-stemningsbilleder.zip`. De øvrige motiver og dubletten er ikke tilføjet.
+- Hovedbilledet `public/images/editorial/garden-hero.webp` er en ny AI-genereret stemningsvisualisering af sort træbeklædning, lys træafskærmning og en grøn have. Det er mærket som visualisering og er ikke et udført Finnz-projekt.
+- Trælamellerne i kontaktvinduet (`public/images/editorial/timber.webp`) stammer fra `hello-world-featured.jpg` i brugerens ZIP fra det gamle site. Billedet er AI-redigeret og mærket som stemningsfoto. Det vises kun i kontaktvinduets desktoplayout. Den tidligere høvleillustration er bevaret som fil og i `downloads/finnz-stemningsbilleder.zip`, men vises ikke på siden.
 - F-cursoren vises kun ved mus og præcis pointer på enheder med hover. Den skjules ved tastaturbrug, uden for siden og ved `prefers-reduced-motion`. Native cursor er fallback, hvis billedet ikke indlæses. Cursoren følger musen direkte og bliver lidt større over links. Billedfilerne er ikke genskabt eller ændret.
 - Den korte præsentationstekst er foreløbig og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
 - Ingen CVR, adresse, priser eller kundereferencer er opfundet.
 
 ## Materialevælger
 
-`src/materials.js` indeholder tre vejledende udendørs materialer: fyr, lærk og thermotræ. Alle visninger bygger på brugerens foto af en træafskærmning omkring affaldsbeholdere. AI-visualiseringerne i `public/images/materials/` viser samme motiv med forskellige træudtryk i kvadratisk format uden beskæring. De beskriver ikke det oprindelige projekts faktiske træsort eller et bekræftet sortiment. Træsort, kvalitet, farve og behandling aftales til den konkrete løsning. Overfladeønskerne er “Afklares sammen”, “Ubehandlet”, “Olieret” og “Træbeskyttelse”; valget ændrer ikke billedet.
+`src/materials.js` har præcis to farvevalg: “Lys” og “Sort”. Begge viser samme afskærmning omkring affaldsbeholdere fra brugerens foto, visualiseret med AI. Der vælges ikke træsort eller overfladebehandling i vælgeren. Behandlingen aftales med Finnz; billederne er vejledende. Filerne er `public/images/materials/enclosure-pine.webp` (lys) og `enclosure-black.webp` (sort), vist i kvadratisk format uden beskæring.
 
-Der er intet forudvalgt materiale; startbilledet viser lyst træ. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Materiale og overflade vises i formularen og indgår i både den kopierede besked og en e-mailkladde. Ændret materialevalg skjuler en tidligere klargjort besked, så den ikke kan kopieres med forældede valg. Valgene gemmes kun i den aktuelle sides hukommelse; navn, e-mail, besked og projektreference bevares ved materialeskift.
+Intet farveønske er forudvalgt; startbilledet viser lyst træ. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Farven følger med til kontaktformularen og indgår i klargjorte/kopierede beskeder som “Farveønske”. Ændret farve skjuler tidligere klargjort output, mens navn, e-mail og besked bevares. Valgene gemmes kun i den aktuelle sides hukommelse.
 
 ## Intro
 

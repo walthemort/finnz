@@ -28,9 +28,9 @@ document.querySelector('#app').innerHTML = `
     </section>
     <figure class="hero-image-section">
       <div class="hero-image-wrap">
-        <img class="hero-image" src="/images/editorial/workshop.webp" alt="Hænder fører en høvl over et bræt på en arbejdsbænk med træspåner" width="1536" height="1024" fetchpriority="high">
+        <img class="hero-image" src="/images/editorial/garden-hero.webp" alt="Stemningsvisualisering af sort træbeklædning og lys træafskærmning i grønne omgivelser" width="1536" height="1024" fetchpriority="high">
       </div>
-      <figcaption>Håndværk i træ · AI-redigeret stemningsfoto</figcaption>
+      <figcaption>AI-genereret stemningsvisualisering</figcaption>
     </figure>
     <section class="projects reveal" id="projekter" aria-labelledby="projects-title">
       <div class="projects-heading"><div><p class="eyebrow">UDVALGTE PROJEKTER</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length).padStart(2, '0')}</span></div>
@@ -81,7 +81,7 @@ document.querySelector('#app').innerHTML = `
     <div class="contact-dialog-content">
       <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div><figure class="contact-timber"><img src="/images/editorial/timber.webp" alt="Lodrette trælameller med naturlig åretegning og bløde skygger" width="1536" height="1024" loading="lazy"><figcaption>Træets struktur · AI-redigeret stemningsfoto</figcaption></figure></div>
         <form id="contact-form" aria-labelledby="form-title">
-          <div class="form-material"><span class="eyebrow">DIT MATERIALEØNSKE</span><div><span id="material-summary">Vi finder materiale og overflade sammen.</span><button class="material-edit" type="button">Tilpas ↗</button></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
+          <div class="form-material"><span class="eyebrow">DIT FARVEØNSKE</span><div><span id="material-summary">Vi finder farven sammen.</span><button class="material-edit" type="button">Tilpas ↗</button></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
           <div class="form-fields">
             <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
             <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
@@ -291,7 +291,7 @@ contactForm.addEventListener('submit', event => {
   name.setCustomValidity(String(data.get('name')).trim() ? '' : 'Skriv dit navn.');
   message.setCustomValidity(String(data.get('message')).trim().length >= 10 ? '' : 'Fortæl lidt mere om din idé (mindst 10 tegn).');
   if (!contactForm.reportValidity()) return;
-  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nMaterialeønske: ${data.get('material')}\nOverfladeønske: ${data.get('finish')}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
+  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nFarveønske: ${data.get('material')}\nBehandling: ${data.get('finish')}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
   result.hidden = false;
   result.querySelector('textarea').value = messageText;
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
@@ -324,8 +324,8 @@ setupMaterialSelector(({ material, finish }) => {
   contactForm.elements.namedItem('material').value = material;
   contactForm.elements.namedItem('finish').value = finish;
   document.querySelector('#material-summary').textContent = material === 'Afklares sammen' && finish === 'Afklares sammen'
-    ? 'Vi finder materiale og overflade sammen.'
-    : `${material === 'Afklares sammen' ? 'Træsort afklares sammen' : material} · ${finish === 'Afklares sammen' ? 'Overflade afklares sammen' : finish}`;
+    ? 'Vi finder farven sammen.'
+    : `Farve: ${material}`;
   result.hidden = true;
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
 }, () => openContact());
