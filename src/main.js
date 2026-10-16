@@ -15,7 +15,7 @@ const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 document.querySelector('#app').innerHTML = `
   <header class="header" id="top">
     <a class="brand" href="#top" aria-label="Finnz Træ & Design, til toppen">${brand}</a>
-    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog">Skriv til os i dag ${arrow}</button></nav>
+    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog" aria-controls="contact-dialog">Lad os tale sammen ${arrow}</button></nav>
   </header>
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
@@ -142,13 +142,22 @@ function openContact({ project = null } = {}) {
   contactDialog.showModal();
   contactDialog.scrollTop = 0;
   syncDialogs();
+  // In the stacked mobile layout, open at the form rather than the introductory phone block.
+  if (matchMedia('(max-width: 900px)').matches) {
+    const form = contactDialog.querySelector('#contact-form');
+    const header = contactDialog.querySelector('.contact-header');
+    contactDialog.scrollTop = Math.max(0, form.getBoundingClientRect().top - contactDialog.getBoundingClientRect().top - header.offsetHeight - 24);
+  }
   const name = document.querySelector('[name="name"]');
   const email = document.querySelector('[name="email"]');
   (name.value.trim() ? email.value.trim() ? message : email : name).focus({ preventScroll: true });
 }
 document.querySelectorAll('[data-open-contact]').forEach(button => {
   button.setAttribute('aria-controls', 'contact-dialog');
-  button.addEventListener('click', () => openContact());
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    openContact();
+  });
 });
 contactDialog.querySelector('.dialog-close').addEventListener('click', () => contactDialog.close());
 contactDialog.querySelector('.material-edit').addEventListener('click', () => {
