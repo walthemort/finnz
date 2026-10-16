@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 924.8 329.72">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Amboy-Black, 'Amboy ';
+        font-size: 239.98px;
+        font-weight: 800;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #161615;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <g>
+        <path class="cls-2" d="M0,329.72l58.14-31.47v-129.97l167.59-94.4V0L0,127.92s2.05,201.8,0,201.8Z"/>
+        <polygon class="cls-2" points="76.61 179.68 76.61 251.51 158.02 205.67 158.02 135.22 76.61 179.68"/>
+      </g>
+      <text class="cls-1" transform="translate(281.42 287.32)"><tspan x="0" y="0">FINNZ</tspan></text>
+    </g>
+  </g>
+</svg>
