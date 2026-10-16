@@ -27,14 +27,16 @@ svg { width: 20px; height: 20px; flex-shrink: 0; }
 
 .skip-link {
   position: fixed;
-  top: -100px;
+  top: 12px;
+  opacity: 0;
+  pointer-events: none;
   left: 20px;
   padding: 12px 20px;
   z-index: 10;
   background: var(--paper);
   border: 1px solid;
 }
-.skip-link:focus { top: 12px; }
+.skip-link:focus { opacity: 1; pointer-events: auto; }
 .header, .hero, .contact, .footer { margin-inline: 5.2%; }
 .header {
   height: 98px;
