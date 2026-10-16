@@ -179,8 +179,9 @@ button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulat
 body.dialog-open { overflow: hidden; }
 /* The native dialog is a full project page, not a floating card. */
 .project-dialog, .contact-dialog { position: fixed; inset: 0; margin: 0; border: 0; padding: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; background: var(--paper); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
-.project-dialog::backdrop, .contact-dialog::backdrop { background: var(--paper); }
-.project-dialog[open], .contact-dialog[open] { animation: project-page-in .4s ease both; }
+.project-dialog::backdrop { background: transparent; }
+.contact-dialog::backdrop { background: var(--paper); }
+.contact-dialog[open] { animation: project-page-in .4s ease both; }
 .project-header { position: sticky; top: 0; z-index: 3; height: 88px; padding-inline: 5.2%; display: flex; align-items: center; justify-content: space-between; gap: 24px; background: #f5f3edf2; backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .project-header .brand-logo { width: 120px; }
 .project-position { color: var(--muted); }
@@ -381,3 +382,9 @@ body.dialog-open { overflow: hidden; }
   .contact-dialog-call { margin-top: 24px; gap: 10px; }
   .contact-dialog-call > a { font-size: 21px; }
 }
+
+.project-home { border: 0; background: none; padding: 0; flex-shrink: 0; }
+.project-transition-image { position: fixed; z-index: 10; display: block; max-width: none; object-fit: cover; pointer-events: none; }
+.project-dialog.is-project-transitioning > .project-header,
+.project-dialog.is-project-transitioning > .project-page { opacity: 0; }
+.project-dialog.is-project-transitioning > .project-page { pointer-events: none; }

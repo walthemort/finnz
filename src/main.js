@@ -4,6 +4,7 @@ import '@fontsource/manrope/latin-600.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import './style.css';
 import { projects } from './projects.js';
+import { createProjectMotion } from './project-motion.js';
 import { materialSelectorMarkup, setupMaterialSelector } from './materials.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
@@ -60,7 +61,7 @@ document.querySelector('#app').innerHTML = `
   </footer>
   <dialog class="project-dialog" id="project-dialog" aria-labelledby="project-title">
     <header class="project-header">
-      <span class="brand">${brand}</span><span class="eyebrow project-position"></span>
+      <button class="brand project-home" type="button" aria-label="Luk projekt og gå tilbage til forsiden">${brand}</button><span class="eyebrow project-position"></span>
       <button class="dialog-close" aria-label="Luk projektvisning"><span>Luk projekt</span><span aria-hidden="true">×</span></button>
     </header>
     <div class="project-page">
@@ -118,6 +119,10 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // A full-screen project page with native modal focus handling.
 const gallery = document.querySelector('#project-dialog');
+const projectMotion = createProjectMotion({
+  dialog: gallery,
+  getCard: () => document.querySelector(`[data-project="${projectIndex}"]`),
+});
 let projectIndex = 0;
 let photoIndex = 0;
 const contactDialog = document.querySelector('#contact-dialog');
@@ -154,7 +159,7 @@ contactDialog.addEventListener('close', () => {
   syncDialogs();
   if (!returnToMaterials) return;
   returnToMaterials = false;
-  if (gallery.open) gallery.close();
+  if (gallery.open) projectMotion.close({ immediate: true });
   requestAnimationFrame(() => {
     document.querySelector('#materialer').scrollIntoView({ behavior: reducedMotion() ? 'instant' : 'smooth', block: 'start' });
     const option = document.querySelector('[name="wood"]:checked') || document.querySelector('[name="wood"]');
@@ -212,12 +217,21 @@ function showProject(index) {
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
     showProject(Number(button.dataset.project));
-    gallery.showModal();
-    syncDialogs();
-    gallery.scrollTop = 0;
+    const matchingPhoto = projects[projectIndex].images.findIndex(photo => photo.src === projects[projectIndex].image);
+    showPhoto(Math.max(0, matchingPhoto));
+    projectMotion.open(button, () => {
+      gallery.showModal();
+      syncDialogs();
+      gallery.scrollTop = 0;
+    });
   });
 });
-gallery.querySelector('.dialog-close').addEventListener('click', () => gallery.close());
+gallery.querySelector('.dialog-close').addEventListener('click', () => projectMotion.close());
+gallery.querySelector('.project-home').addEventListener('click', () => projectMotion.close());
+gallery.addEventListener('cancel', event => {
+  event.preventDefault();
+  projectMotion.close();
+});
 gallery.querySelector('.gallery-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
 gallery.querySelector('.gallery-next').addEventListener('click', () => showPhoto(photoIndex + 1));
 gallery.querySelector('.next-project').addEventListener('click', () => {

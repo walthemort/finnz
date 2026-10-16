@@ -51,7 +51,7 @@ Introen ligger direkte i HTML og vises ved hver indlæsning, også ved genindlæ
 
 ## Projektvisning
 
-Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver altid adgang til lukning; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
+Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver adgang til lukning via både det originale logo og “Luk projekt”; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
 
 ## Kontrol
 
@@ -64,3 +64,9 @@ Hjemmesiden er ikke publiceret.
 Alle kontaktknapper åbner det samme native `dialog`: header, kontaktsektion, inspirationsfelt, materialevælger og projekt-CTA. Der er ingen ekstra HTML-sider eller router. Kontaktvinduet og projektvinduet er overlays på forsiden, og åbning/lukning ændrer ikke URL'en.
 
 Når kontakt åbnes fra et projekt, forbliver projektvinduet nedenunder. Lukning/Escape vender tilbage til projektet og den knap, der åbnede formularen. “Tilpas” i formularen lukker begge vinduer og fokuserer materialevælgeren på forsiden. Navn, e-mail, besked og materialeønske bevares ved lukning, genåbning og vinduesskift. Body-scroll og F-cursorens placering følger det øverste åbne vindue.
+
+## Projektanimation
+
+`src/project-motion.js` lader kortets billede og papirets ramme vokse ind i fuldskærmsvisningen. Billedet beskæres med `object-fit: cover` under bevægelsen og bliver ikke strakt. Ved lukning via logo, knap eller Escape foldes billedet tilbage til det aktuelle projektkort. Forskellige billedvalg blandes tilbage til kortets billede. Lukning under åbneanimationen vender den igangværende bevægelse om. Reduceret bevægelse og browsere uden Web Animations bruger øjeblikkelig åbning/lukning.
+
+Billedet, man åbner fra, vises først i projektet for at bevare kontinuiteten. Ved navigation fra kontaktformularen tilbage til materialer lukkes projektet straks, så animationen ikke flytter fokus væk fra materialevælgeren. Midlertidige billedlag og animationer ryddes op, når vinduet lukkes.
