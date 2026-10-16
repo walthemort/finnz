@@ -47,7 +47,7 @@ document.querySelector('#app').innerHTML = `
         }).join('')}
       </div>
       <div class="project-rail-status"><span>Tryk for at udfolde · swipe for flere</span><div class="project-rail-dots" role="group" aria-label="Vælg projektkort"></div><span class="project-rail-counter"></span></div>
-      <p class="project-note">${projects.length} udførte Finnz-projekter — flere følger. Fotografierne er redigeret med AI.</p>
+      <p class="project-note">${projects.length} udførte Finnz-projekter — flere følger.</p>
     </section>
     ${materialSelectorMarkup(arrow)}
     <section class="contact reveal" id="kontakt" aria-labelledby="contact-title">
@@ -80,7 +80,7 @@ document.querySelector('#app').innerHTML = `
         <div class="project-photo-grid" role="group" aria-label="Supplerende projektbilleder"></div>
       </div>
       <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
-      <p class="project-disclaimer">Fotografier af et udført Finnz-projekt, redigeret med AI.</p>
+      <p class="project-disclaimer">Fotografier af et udført Finnz-projekt.</p>
       <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button" type="button" aria-haspopup="dialog" aria-controls="contact-dialog">Fortæl os om din idé ${arrow}</button></section>
       <button class="next-project"><span><span class="eyebrow">NÆSTE PROJEKT</span><span class="next-project-title"></span></span>${arrow}</button>
     </div>
