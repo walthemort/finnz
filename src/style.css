@@ -397,7 +397,7 @@ img.is-image-pending, img.is-image-failed { visibility: hidden; }
 .comparison-note svg { display: block; width: 91px; height: 73px; margin-left: -16px; margin-top: 4px; }
 .material-preview.is-dark-leading .comparison-note { left: calc(var(--split) - 112px); transform: rotate(4deg); }
 .material-preview.is-dark-leading .comparison-note svg { transform: scaleX(-1); margin-left: 18px; }
-.material-preview.is-between .comparison-note > span { background: #f5f3ede6; padding: 4px; }
+.material-preview.is-between .comparison-note > span { -webkit-text-stroke: 2px var(--paper); paint-order: stroke fill; }
 .material-preview.is-dragging .comparison-note { visibility: hidden; }
 .comparison-note .annotation-arrow-mobile { display: none; }
 .project-card:focus-visible { outline-offset: -4px; }
