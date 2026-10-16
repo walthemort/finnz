@@ -16,7 +16,7 @@ export function materialSelectorMarkup(arrow) {
         <fieldset class="wood-options"><legend>Lys eller sort?</legend><div class="wood-swatches">${materials.map(material => `<label class="wood-option"><input type="radio" name="wood" value="${material.id}"><span class="wood-swatch" style="--wood-color:${material.color}" aria-hidden="true"></span><span>${material.name}</span></label>`).join('')}</div></fieldset>
         <p class="material-description" aria-live="polite">${materials[0].description}</p>
         <p id="comparison-help" class="compare-hint">Træk i billedet, eller vælg en farve. Den farve, der fylder mest, bliver dit valg.</p>
-        <div class="material-actions"><button class="text-link material-apply" type="button" aria-haspopup="dialog">Tal med os om dit valg ${arrow}</button><button class="material-reset" type="button">Jeg vælger senere</button></div>
+        <div class="material-actions"><button class="text-link material-apply" type="button" aria-haspopup="dialog"><span>Tal med os om dit valg – eller hvis du ønsker en anden farve</span> ${arrow}</button></div>
         <p class="material-note">Vejledende AI-visualiseringer baseret på et projektfoto. Træsort og behandling aftaler vi sammen.</p>
       </div>
     </div>
@@ -95,7 +95,6 @@ export function setupMaterialSelector(onChange, onContact) {
     };
     input.addEventListener('change', pick); input.addEventListener('click', pick);
   });
-  section.querySelector('.material-reset').addEventListener('click', () => select(null));
   section.querySelector('.material-apply').addEventListener('click', onContact);
   render();
   return { select, reset: () => select(null) };
