@@ -6,17 +6,20 @@ import './style.css';
 import { projects } from './projects.js';
 import { createProjectMotion } from './project-motion.js';
 import { materialSelectorMarkup, setupMaterialSelector } from './materials.js';
+import { contactFormMarkup, setupContactForm } from './contact-form.js';
+import { setupImageLoading, setupPageNavigation, setupGallerySwipe } from './ui-enhancements.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
 const brand = '<img class="brand-logo" src="/brand/logo-dark.webp" alt="Finnz" width="925" height="331">';
-const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || '';
+const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'zfzi@hotmail.com';
 const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 
 document.querySelector('#app').innerHTML = `
-  <header class="header" id="top">
+  <div id="top" aria-hidden="true"></div>
+  <div class="header-shell"><header class="header">
     <a class="brand" href="#top" aria-label="Finnz Træ & Design, til toppen">${brand}</a>
     <nav aria-label="Hovednavigation"><a href="#projekter">Projekter</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog" aria-controls="contact-dialog">Lad os tale sammen ${arrow}</button></nav>
-  </header>
+  </header></div>
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
       <p class="eyebrow intro-reveal"><span class="status-dot"></span> FINNZ TRÆ & DESIGN</p>
@@ -38,6 +41,7 @@ document.querySelector('#app').innerHTML = `
         ${projects.map((project, index) => `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Se ${project.title.toLowerCase()}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1086" height="1448" loading="lazy"><span class="project-open">${arrow}</span></span><span class="project-meta"><span class="eyebrow">${project.kind}</span><span class="project-number">0${index + 1}</span></span><span class="project-title">${project.title}</span></button>`).join('')}
         <button class="project-invite" type="button" data-open-contact aria-haspopup="dialog"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632" loading="lazy"><span>Det næste<br>kunne være <em>dit.</em></span><span class="invite-link">Lad os høre din idé ${arrow}</span></button>
       </div>
+      <div class="project-rail-status"><span>Træk for at se flere →</span><div class="project-rail-dots" role="group" aria-label="Vælg projektkort"></div><span class="project-rail-counter"></span></div>
       <p class="project-note">Udførte Finnz-projekter. Fotografierne er redigeret med AI.</p>
     </section>
     ${materialSelectorMarkup(arrow)}
@@ -80,16 +84,7 @@ document.querySelector('#app').innerHTML = `
     <header class="project-header contact-header"><span class="brand">${brand}</span><span class="eyebrow project-position">KONTAKT</span><button class="dialog-close" aria-label="Luk kontaktformular"><span>Luk kontakt</span><span aria-hidden="true">×</span></button></header>
     <div class="contact-dialog-content">
       <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div><figure class="contact-timber"><img src="/images/editorial/timber.webp" alt="Lodrette trælameller med naturlig åretegning og bløde skygger" width="1536" height="1024" loading="lazy"><figcaption>Træets struktur · AI-redigeret stemningsfoto</figcaption></figure></div>
-        <form id="contact-form" aria-labelledby="form-title">
-          <div class="form-material"><span class="eyebrow">DIT FARVEØNSKE</span><div><span id="material-summary">Vi finder farven sammen.</span><button class="material-edit" type="button">Tilpas ↗</button></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
-          <div class="form-fields">
-            <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
-            <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
-          </div>
-          <label>Hvad har du i tankerne?<textarea name="message" rows="4" minlength="10" maxlength="4000" required placeholder="Fortæl lidt om din idé …"></textarea></label>
-          <div class="form-actions"><p>${contactEmail ? 'Du gennemser og sender selv beskeden i din mailapp.' : 'E-mailadressen er på vej. Du kan klargøre din besked her; den bliver ikke sendt.'}</p><button type="submit" class="form-submit">${contactEmail ? 'Åbn som e-mail' : 'Klargør besked'} ${arrow}</button></div>
-          <div class="form-result" hidden><p role="status"></p><textarea rows="6" readonly aria-label="Din klargjorte besked"></textarea><button type="button" class="text-link" id="copy-message">Kopiér beskeden ${arrow}</button></div>
-        </form>
+        ${contactFormMarkup(arrow)}
     </div>
   </dialog>
   <div class="brand-cursor" aria-hidden="true"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632"></div>
@@ -278,57 +273,19 @@ window.addEventListener('blur', hideCursor);
 cursorMedia.addEventListener('change', hideCursor);
 document.addEventListener('keydown', event => { if (event.key === 'Tab') hideCursor(); });
 
-// Prepare an email draft; never claim that a message was sent from this static site.
+let materialController;
 const contactForm = document.querySelector('#contact-form');
-const result = contactForm.querySelector('.form-result');
-const copyMessage = document.querySelector('#copy-message');
-let messageText = '';
-contactForm.addEventListener('submit', event => {
-  event.preventDefault();
-  const data = new FormData(contactForm);
-  const name = contactForm.elements.namedItem('name');
-  const message = contactForm.elements.namedItem('message');
-  name.setCustomValidity(String(data.get('name')).trim() ? '' : 'Skriv dit navn.');
-  message.setCustomValidity(String(data.get('message')).trim().length >= 10 ? '' : 'Fortæl lidt mere om din idé (mindst 10 tegn).');
-  if (!contactForm.reportValidity()) return;
-  messageText = `Hej Finnz Træ & Design,\n\n${String(data.get('message')).trim()}\n\nFarveønske: ${data.get('material')}\nBehandling: ${data.get('finish')}\n\nVenlig hilsen\n${String(data.get('name')).trim()}\n${data.get('email')}`;
-  result.hidden = false;
-  result.querySelector('textarea').value = messageText;
-  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
-  result.querySelector('[role="status"]').textContent = contactEmail
-    ? 'Din besked er klar i din mailapp. Send den derfra, eller kopiér teksten her.'
-    : 'Din besked er klar, men er ikke sendt. Du kan kopiere den her.';
-  if (contactEmail) {
-    const emailLink = document.createElement('a');
-    emailLink.href = `mailto:${contactEmail}?subject=${encodeURIComponent('En idé i træ — ' + data.get('name'))}&body=${encodeURIComponent(messageText)}`;
-    emailLink.click();
-  }
-});
-copyMessage.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(messageText);
-    copyMessage.textContent = 'Besked kopieret ✓';
-  } catch {
-    const text = result.querySelector('textarea');
-    text.focus(); text.select();
-    result.querySelector('[role="status"]').textContent = 'Markér teksten og kopiér den med Ctrl+C eller Cmd+C.';
-  }
-});
-contactForm.addEventListener('input', event => {
-  if (event.target.setCustomValidity) event.target.setCustomValidity('');
-  result.hidden = true;
-  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
-});
-
-setupMaterialSelector(({ material, finish }) => {
+const enquiry = setupContactForm({ onResetColor: () => materialController?.reset() });
+materialController = setupMaterialSelector(({ material, finish }) => {
   contactForm.elements.namedItem('material').value = material;
   contactForm.elements.namedItem('finish').value = finish;
-  document.querySelector('#material-summary').textContent = material === 'Afklares sammen' && finish === 'Afklares sammen'
-    ? 'Vi finder farven sammen.'
-    : `Farve: ${material}`;
-  result.hidden = true;
-  copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
+  document.querySelector('#material-summary').textContent = material === 'Afklares sammen' ? 'Vi finder farven sammen.' : `Farve: ${material}`;
+  enquiry.invalidate();
 }, () => openContact());
+if (enquiry.restoredColor) materialController.select(enquiry.restoredColor);
+setupGallerySwipe(gallery.querySelector('.project-cover'), direction => showPhoto(photoIndex + direction));
+setupImageLoading();
+setupPageNavigation();
 
 // A visible branded intro on every page load, including cached reloads.
 function startIntro() {

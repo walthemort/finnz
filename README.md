@@ -1,74 +1,81 @@
 # Finnz Træ & Design
 
-En kort, dansk præsentationsside med ét hovedbudskab, et hovedbillede af træarkitektur, en kompakt projektrække og direkte kontakt. Bygget med Vite og almindelig JavaScript/CSS.
+En kort dansk hjemmeside med projekter, farveinspiration og kontakt. Vite og almindelig JavaScript/CSS, med en lille Node-server til formularafsendelse. Projekter og kontakt åbner som fuldskærmsvinduer på samme side; der er ingen undersider eller router.
 
-## Lokal udvikling
+## Start og kontrol
 
-Kræver Node.js 20.19+ eller 22.12+ (miljøet er valideret med Node 24).
+Kræver Node.js 24.5+ (valideret med 24.19). Kommandoerne bruger indbygget `.env.local`-indlæsning og `--use-env-proxy`, så HTTPS-mailkald følger miljøets netværksproxy.
 
 ```sh
-npm ci
-npm run dev
+npm ci --cache /tmp/finnz-npm-cache --no-audit --no-fund
+cp .env.example .env.local
+npm run dev -- --port 5173
 ```
 
+Bevar en eksisterende `.env.local`; overskriv ikke lokale værdier eller hemmeligheder. Vite leverer både siden og `/api/contact` under udvikling. Kontrollér sidens titel og `GET /api/contact` med lokale HTTP-kald. Et svar med `ready: false` betyder, at mailafsendelse endnu ikke er konfigureret.
+
 ```sh
+npm test
 npm run build
-npm run preview
+npm start
 ```
 
-Produktionsfiler ligger i `dist/` og kan hostes som en statisk hjemmeside. Fontfiler og billeder leveres lokalt uden eksterne font- eller billedkald. Der er ingen analyseværktøjer eller eksterne formularservices.
+`npm start` leverer `dist/` og kontakt-API'et på `PORT` (standard 3000). `npm run preview -- --port 4173` leverer også API'et til lokal produktionskontrol. Processer skal startes igen i nye cloudopgaver. Brug den eksisterende isolerede checkout; opret kun Git-worktrees efter udtrykkeligt ønske.
 
-## Kontaktoplysninger
+## Mail og hosting
 
-Telefonnummeret er +45 41 35 20 25. Kopiér `.env.example` til `.env.local`, hvis du vil tilføje e-mail eller ændre telefonnummer lokalt:
+Modtageren er foreløbig **zfzi@hotmail.com**, bekræftet af brugeren. Telefonnummeret er **+45 41 35 20 25**.
 
-- `VITE_CONTACT_EMAIL`: Den rigtige modtageradresse. Tom som standard, indtil adressen er bekræftet.
-- `VITE_CONTACT_PHONE`: Telefonnummer med landekode.
+Rigtig afsendelse er implementeret via Resends HTTPS-API. Hosting skal køre Node-serveren eller tilslutte den tilsvarende kontakt-handler; ren statisk hosting af `dist/` kan ikke sende mails. Hostingudbyderen er endnu ikke bekræftet.
 
-Genstart udviklingsserveren efter ændringer i miljøvariabler. Kør et nyt build efter ændringer før publicering. VITE-variabler er offentlige klientværdier og må aldrig indeholde hemmeligheder.
+1. Opret/brug en Resend-konto og verificér det afsenderdomæne, Finnz råder over.
+2. Indtast `RESEND_API_KEY` sikkert som serverhemmelighed. Brug ikke `VITE_` til nøgler.
+3. Sæt `CONTACT_FROM_EMAIL` til en adresse på det verificerede domæne og `CONTACT_TO_EMAIL=zfzi@hotmail.com`.
+4. Sæt `PUBLIC_SITE_URL` til sitets offentlige origin ved publicering. Standarddomænet til delingsmetadata er brugerens nuværende domæne, `https://xn--finnz-trogdesign-1ob.dk`.
+5. `CONTACT_RESPONSE_TIME` er valgfri og vises kun ved aktiveret afsendelse. Sæt kun en svartid, Finnz har bekræftet. Ingen bestemt svartid er aftalt endnu.
+6. Sæt kun `TRUST_PROXY=true`, hvis Node-serveren ligger bag en betroet reverse proxy, der tilføjer den rigtige klientadresse i `X-Forwarded-For`. Ellers bruges TCP-adressen til hastighedsbegrænsning.
 
-Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. “Skriv til os i dag” åbner kontaktformularen i et fuldskærmsvindue på samme side. Formularen fylder ikke på forsiden. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Projektkort åbner et fuldskærmsvindue på samme side med tre billeder, tekst, projektfakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og de øvrige billedvinkler; på mobil kan projektrækken swipes.
+`VITE_CONTACT_EMAIL` og `VITE_CONTACT_PHONE` er offentlige kontaktoplysninger. Vite-ændringer kræver genstart eller nyt build; serverværdier kræver genstart af serveren.
 
-## Indhold og billeder
+Der er endnu ingen Resend-nøgle eller verificeret afsender i det klargjorte miljø. En mail er ikke sendt eller leveret under kontrollen. Servertests og browsertests med simulerede svar kontrollerer data, vedhæftninger, fejl, genforsøg og kvittering. Ægte levering skal testes efter aktivering.
 
-- Originale SVG- og WebP-logopakker ligger under `public/brand/`. De er bevaret uden ændringer.
-- Header, footer, intro og begge fuldskærmsvinduer bruger den originale `logo-dark.webp` fra brugerens ZIP: F-ikon med mørk trætekstur og sort FINNZ-tekst. Hele logoet har uændrede proportioner, og logoteksten afhænger ikke af en installeret font. Desktopcursor bruger `mark-outlined.webp` (ZIP-filens `Asset 12.webp`) med brugerens hvide kant. Favicon er en kvadratisk SVG-wrapper med det samme WebP-billede indlejret og `preserveAspectRatio="xMidYMid meet"`; billedet strækkes ikke. Regenerér wrapperen med `node scripts/generate-favicon.mjs`, hvis originalikonet udskiftes. Originalbilledets bytes er uændrede.
-- De gamle SVG-wordmarks indeholder stadig `<text>` med `font-family: Amboy-Black`. Derfor kræver de Amboy-fonten; en SVG med korrekt outlined tekst har bogstavernes geometri som paths. Brug `Type → Create Outlines` i Illustrator, eksportér en ny SVG og kontrollér selve eksporten, før der skiftes tilbage til SVG.
-- `src/projects.js` indeholder nu to udførte Finnz-projekter fra brugerens fotos: et mørkt havehus og en terrasse med træafskærmning. Hvert projekt har tre AI-redigerede billeder i `public/images/projects/01/` og `02/`, optimeret til WebP. Siden oplyser, at fotografierne er AI-redigerede; de skal ikke bruges som præcis dokumentation for farver eller konstruktionsdetaljer. Tekster beskriver kun det synlige arbejde uden at opfinde træsort, mål, sted eller kunde. PNG-pakkerne kan hentes fra `downloads/finnz-projekt-01.zip` og `downloads/finnz-projekt-02.zip`. Materialevælgeren bruger fortsat tydeligt mærkede, genererede stemningsvisualiseringer.
-- Hovedbilledet `public/images/editorial/garden-hero.webp` er en ny AI-genereret stemningsvisualisering af sort træbeklædning, lys træafskærmning og en grøn have. Det er mærket som visualisering og er ikke et udført Finnz-projekt.
-- Trælamellerne i kontaktvinduet (`public/images/editorial/timber.webp`) stammer fra `hello-world-featured.jpg` i brugerens ZIP fra det gamle site. Billedet er AI-redigeret og mærket som stemningsfoto. Det vises kun i kontaktvinduets desktoplayout. Den tidligere høvleillustration er bevaret som fil og i `downloads/finnz-stemningsbilleder.zip`, men vises ikke på siden.
-- F-cursoren vises kun ved mus og præcis pointer på enheder med hover. Den skjules ved tastaturbrug, uden for siden og ved `prefers-reduced-motion`. Native cursor er fallback, hvis billedet ikke indlæses. Cursoren følger musen direkte og bliver lidt større over links. Billedfilerne er ikke genskabt eller ændret.
-- Den korte præsentationstekst er foreløbig og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
-- Ingen CVR, adresse, priser eller kundereferencer er opfundet.
+## Kontaktformular
 
-## Materialevælger
+`src/contact-form.js` håndterer den fælles formular: navn, e-mail, valgfri opgavetype, opkaldsønske med telefonnummer, omtrentlige mål i cm, besked og billeder/skitser. Native radioknapper og felter understøtter tastatur. Fejl vises ved felterne og i en samlet besked, med fokus på første fejl.
 
-`src/materials.js` har præcis to farvevalg: “Lys” og “Sort”. Begge viser samme afskærmning omkring affaldsbeholdere fra brugerens foto, visualiseret med AI. Der vælges ikke træsort eller overfladebehandling i vælgeren. Behandlingen aftales med Finnz; billederne er vejledende. Filerne er `public/images/materials/enclosure-pine.webp` (lys) og `enclosure-black.webp` (sort), vist i kvadratisk format uden beskæring.
+Vedhæftninger: højst fire JPG/PNG/WebP/PDF-filer, 3 MB pr. fil og 8 MB i alt. Billeder får forhåndsvisning, og filer kan fjernes enkeltvis. Serveren validerer også typer, signaturer, antal og størrelser. Filer behandles i hukommelsen og gemmes ikke på serverens disk.
 
-Intet farveønske er forudvalgt; startbilledet viser lyst træ. Besøgende vælger med mus, touch eller radioknappernes tastaturbetjening og kan nulstille med “Jeg vælger senere”. Farven følger med til kontaktformularen og indgår i klargjorte/kopierede beskeder som “Farveønske”. Ændret farve skjuler tidligere klargjort output, mens navn, e-mail og besked bevares. Valgene gemmes kun i den aktuelle sides hukommelse.
+`server/contact.js` validerer og sender til Resend med brugerens e-mail som Reply-To. Backend bruger en skjult spamfælde, kontrol af browserens origin, fem forsøg pr. ti minutter pr. klientadresse pr. serverproces, tidsgrænse og en idempotensnøgle ved genforsøg. Begrænsningen deles ikke mellem flere serverinstanser. HTTP-adapteren afviser også store request bodies.
 
-## Intro
+Formularen viser først “sendt”, når serveren har en bekræftelse med reference fra mailtjenesten; det er ikke en læse- eller leveringskvittering. Fejl bevarer oplysninger og vedhæftninger. Under afsendelse låses felterne mod dobbeltklik. Uden aktiv mailopsætning står der tydeligt, at onlineafsendelse ikke er åbnet, og beskeden kan kun klargøres/kopieres. Vedhæftninger sendes ikke i denne tilstand.
 
-Introen ligger direkte i HTML og vises ved hver indlæsning, også ved genindlæsning med cached billeder og fonte. Logoet vises mindst 1,1 sekund, før det fader ud. Ved reduceret bevægelse vises en statisk udgave i mindst 0,35 sekund. Parathed af hovedbillede og fonte kan forlænge visningen til højst 2,2 sekunder plus udtoning. Ingen session storage eller falsk procenttæller bruges. Tastatur eller klik afslutter straks introen. En separat HTML-sikring fjerner overlayet efter 5 sekunder, hvis JavaScript-modulet fejler.
+Kladder gemmes lokalt i browseren i syv dage, med mulighed for at slette dem. Navn, e-mail, tekst, telefon, opkaldsønske, opgavetype, mål og farve gendannes. Filer og deres indhold gemmes ikke; efter genindlæsning vises en påmindelse om at vælge dem igen. Kvitteret afsendelse sletter kladden. Lagerfejl forhindrer ikke brug af formularen.
 
-## Projektvisning
+Kontakt fra et projekt åbner oven på projektvinduet. Lukning gendanner fokus og scroll-lås. “Tilpas” lukker begge vinduer og fokuserer farvevalget. En projektreference indsættes kun i en tom besked.
 
-Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Portrætfotos vises i fuldt format i et kompakt galleri: på desktop står det valgte billede lidt større til venstre, og de to øvrige vinkler står ved siden af. På mobil/tablet ligger de to mindre billeder samlet under hovedbilledet. Klik på en anden vinkel bytter den med hovedbilledet, så alle tre billeder fortsat er synlige uden gentagelser. Fast topbjælke giver adgang til lukning via både det originale logo og “Luk projekt”; Escape gendanner fokus på projektkortet. Pilknapper, de to øvrige billedvinkler og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste projekt” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
+## Farvevælger og navigation
 
-## Kontrol
+`src/materials.js` viser kun **Lys** og **Sort**, baseret på brugerens afskærmning omkring affaldsbeholdere. Der er intet forudvalgt farveønske. Billederne er vejledende AI-visualiseringer uden løfte om en bestemt træsort eller behandling. En skyder sammenligner billederne i identiske dimensioner; sammenligning vælger ikke en farve på kundens vegne. Farvevalg giver en blød overgang, sender ønsket videre til formularen og ugyldiggør tidligere klargjort output.
 
-Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale WebP-logoer, faviconets billedproportioner ved 16/32/64 px, introens parathed/timeout/genbesøg/reduceret bevægelse, kontaktvinduets fuldskærmslayout, fokus og Escape-lukning, formularens validering og kopiering samt materialevalg, nulstilling og overførsel til beskeden, mus/touch/reduced-motion cursor, galleriets knapper, tastatur og Escape, mobilrækkens swipe samt billedindlæsning og vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
+`src/ui-enhancements.js` giver projektgalleriet vandret swipe, mens lodret scroll og zoombevægelser bevares. Pilknapper, piletaster og de øvrige billeder virker stadig. Mobilens projektrække har dots, tæller og swipe-hint. Topbjælken bliver kompakt og følger med ved scroll uden at flytte sidens indhold. Billedpladsholdere bevarer layoutet under indlæsning; fejl får en besked. Reduceret bevægelse understøttes.
 
-Hjemmesiden er ikke publiceret.
+## Logo, billeder og projekter
 
-## Kontaktvindue og navigation
+- Brug de originale filer i `public/brand/`. Header, footer, intro og kontakt-/projektvinduer bruger `logo-dark.webp`: trætekstur i F'et og sort FINNZ-tekst. Proportionerne og originalfilerne er uændrede.
+- F-cursoren og faviconet bruger `mark-outlined.webp`. Favicon er en kvadratisk SVG-wrapper med `preserveAspectRatio="xMidYMid meet"`, genereret af `scripts/generate-favicon.mjs`.
+- Gamle SVG-wordmarks har levende tekst med `font-family: Amboy-Black`. De kræver den font. Nye outlined SVG'er skal indeholde bogstavernes paths, før de bruges i stedet for WebP.
+- `src/projects.js` indeholder to udførte Finnz-projekter fra brugerens fotos: mørkt havehus og terrasse med træafskærmning, tre AI-redigerede billeder hver. Der opfindes ikke træsort, dimensioner, adresse, kunde eller CVR. PNG-pakker ligger i `downloads/`.
+- Galleriet viser alle tre portrætfotos samlet og uden stræk: på desktop det valgte billede lidt større til venstre, to vinkler ved siden af; på mobil hovedbillede og to mindre vinkler. De mindre billeder bytter med hovedbilledet ved klik.
+- `src/project-motion.js` animerer kortets billede og papir ind i/ud af projektvinduet. Logo, luk-knap og Escape bruger samme lukning. Lukning under åbning vender animationen; midlertidige lag ryddes op. Materialenavigation lukker straks for at bevare fokus.
+- `garden-hero.webp` er en mærket AI-genereret stemningsvisualisering. `timber.webp` i kontaktvinduet stammer fra brugerens gamle site. Den tidligere høvleillustration er bevaret som fil, men vises ikke.
+- `public/social/finnz-preview.jpg` og Open Graph-/Twitter-metadata giver et delingsbillede. Metadata indeholder absolutte URL'er; bekræft domæne og HTTPS før lancering. Delingstjenester kan cache gamle previews.
 
-Alle kontaktknapper åbner det samme native `dialog`: header, kontaktsektion, inspirationsfelt, materialevælger og projekt-CTA. Der er ingen ekstra HTML-sider eller router. Kontaktvinduet og projektvinduet er overlays på forsiden, og åbning/lukning ændrer ikke URL'en.
+Introen vises ved hver indlæsning: normalt minimum 1,1 sek., parathedsfrist 2,2 sek. plus udtoning; reduceret bevægelse minimum 0,35 sek. Interaktion afslutter den. En separat HTML-sikring fjerner den efter fem sekunder ved modulfejl.
 
-Når kontakt åbnes fra et projekt, forbliver projektvinduet nedenunder. Lukning/Escape vender tilbage til projektet og den knap, der åbnede formularen. “Tilpas” i formularen lukker begge vinduer og fokuserer materialevælgeren på forsiden. Navn, e-mail, besked og materialeønske bevares ved lukning, genåbning og vinduesskift. Body-scroll og F-cursorens placering følger det øverste åbne vindue.
+## Verifikation
 
-## Projektanimation
+`npm test` kører ti backendtests: validering, filgrænser/signaturer, korrekt mailpayload, Origin/spamfælde, manglende opsætning, mailfejl/genforsøg, hastighedsbegrænsning og HTTP-grænser for store uploads. Testene sender ingen rigtige mails.
 
-`src/project-motion.js` lader kortets billede og papirets ramme vokse ind i fuldskærmsvisningen. Billedet beskæres med `object-fit: cover` under bevægelsen og bliver ikke strakt. Ved lukning via logo, knap eller Escape foldes billedet tilbage til det aktuelle projektkort. Forskellige billedvalg blandes tilbage til kortets billede. Lukning under åbneanimationen vender den igangværende bevægelse om. Reduceret bevægelse og browsere uden Web Animations bruger øjeblikkelig åbning/lukning.
+Chromiumkontrol omfatter 320/390/768/1440 px, formular og kladdegendannelse, callbacks, opgavetyper, mål, vedhæftninger og fjernelse, simuleret fejlsvar/kvittering, kopiering, farvevalg/-sammenligning, native touch-swipe og lodret scroll, kompakt header, projektanimationer, stablede vinduer, pladsholdere ved langsomme/fejlede billeder, delingsmetadata og fravær af JavaScriptfejl/horisontalt overflow.
 
-Billedet, man åbner fra, vises først i projektet for at bevare kontinuiteten. Ved navigation fra kontaktformularen tilbage til materialer lukkes projektet straks, så animationen ikke flytter fokus væk fra materialevælgeren. Midlertidige billedlag og animationer ryddes op, når vinduet lukkes.
+Hjemmesiden er ikke deployet. Publicering af cloudmiljøet er ikke publicering af hjemmesiden.

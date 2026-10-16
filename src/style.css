@@ -383,3 +383,104 @@ body.dialog-open { overflow: hidden; }
 .project-dialog.is-project-transitioning > .project-header,
 .project-dialog.is-project-transitioning > .project-page { opacity: 0; }
 .project-dialog.is-project-transitioning > .project-page { pointer-events: none; }
+
+/* A stable header footprint prevents content jumps when the navigation compacts. */
+html { scroll-padding-top: 110px; }
+.header-shell { --bar-height: 98px; height: 98px; position: sticky; top: 0; z-index: 20; pointer-events: none; }
+.header-shell::before { content: ''; position: absolute; inset: 0 0 auto; height: var(--bar-height); background: #f5f3edf5; backdrop-filter: blur(14px); z-index: -1; transition: height .25s ease; }
+.header-shell .header { height: var(--bar-height); pointer-events: auto; transition: height .25s ease; }
+.header-shell.is-compact { --bar-height: 72px; }
+.header-shell.is-compact .brand-logo { width: 115px; }
+.header-shell .brand-logo { transition: width .25s ease; }
+.skip-link { z-index: 1000; }
+.project-rail-status { display: none; }
+.project-cover { touch-action: pan-y pinch-zoom; }
+
+/* Image placeholders use the same warm palette and retain each photo's geometry. */
+.image-frame { position: relative; }
+.image-frame.is-image-loading::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, #e1dbcc, #ede8dc, #d8d7c8); animation: image-placeholder 1.6s ease-in-out infinite alternate; }
+img.is-image-pending, img.is-image-failed { visibility: hidden; }
+.image-error { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; font-size: 11px; background: #e7e4d9; color: var(--muted); }
+@keyframes image-placeholder { from { opacity: .55; } to { opacity: 1; } }
+
+/* Both color versions share identical image bounds; the split never resizes a photo. */
+.material-stage { position: relative; width: 100%; height: 100%; aspect-ratio: 1; overflow: hidden; --split: 50%; }
+.material-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+#material-dark-image { opacity: 0; transition: opacity .45s ease; }
+.material-stage[data-color=sort] #material-dark-image, .material-stage.is-comparing #material-dark-image { opacity: 1; }
+.material-stage.is-comparing #material-dark-image { clip-path: inset(0 0 0 var(--split)); transition: none; }
+.comparison-line { position: absolute; z-index: 2; left: var(--split); top: 0; bottom: 0; width: 2px; background: #f5f3ed; box-shadow: 0 0 3px #0008; pointer-events: none; }
+.comparison-line > span { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: var(--ink); background: var(--paper); box-shadow: 0 2px 15px #0003; font-size: 20px; }
+.comparison-range { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: ew-resize; touch-action: pan-y; }
+.material-stage:has(.comparison-range:focus-visible) { outline: 3px solid #8a6b43; outline-offset: -3px; }
+.compare-toggle { display: flex; align-items: center; gap: 10px; font-size: 11px; cursor: pointer; margin-top: 15px; }
+.compare-toggle input { accent-color: #3b5142; width: 16px; height: 16px; }
+.compare-hint { margin-top: 10px; font-size: 10px; color: var(--muted); line-height: 1.8; }
+[hidden] { display: none !important; }
+
+/* Extra enquiry details stay inside the full-screen contact view. */
+.enquiry-fields, .job-options, .dimension-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
+#contact-form .field-error { display: block; color: #9b382c; font-size: 10px; line-height: 1.7; margin-top: 6px; }
+#contact-form .field-error:empty { display: none; }
+#contact-form [aria-invalid=true] { border-color: #a34635; }
+.job-options, .dimension-fields { margin-bottom: 23px; }
+.job-options legend, .dimension-fields legend { font-size: 11px; padding: 0; margin-bottom: 12px; }
+.job-options legend span, .dimension-fields legend span, .upload-label > span { color: var(--muted); font-size: 10px; }
+.job-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+#contact-form .job-chips label { margin: 0; position: relative; cursor: pointer; }
+#contact-form .job-chips input { position: absolute; width: 1px; height: 1px; opacity: 0; padding: 0; margin: 0; }
+.job-chips label > span { display: block; border: 1px solid #bfc5b5; padding: 9px 12px; font-size: 10px; }
+.job-chips label:has(input:checked) > span { background: #e6e7db; border-color: #4f6345; }
+.job-chips label:has(input:focus-visible) > span { outline: 2px solid #8a6b43; outline-offset: 3px; }
+.callback-row { margin-bottom: 23px; }
+#contact-form .callback-choice { display: flex; align-items: center; gap: 10px; margin: 0; cursor: pointer; }
+#contact-form .callback-choice input { width: 17px; height: 17px; padding: 0; margin: 0; accent-color: #3b5142; }
+#contact-form .callback-number { margin: 16px 0 0; }
+.dimension-fields > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+#contact-form .dimension-fields label { margin: 0; font-size: 10px; min-width: 0; }
+#contact-form .dimension-fields input { padding: 9px 11px; }
+.attachment-field { margin-bottom: 25px; }
+#contact-form .upload-label { margin-bottom: 11px; }
+#contact-form .upload-button { display: inline-flex; align-items: center; gap: 12px; position: relative; border: 1px dashed #a4ad99; padding: 12px 17px; cursor: pointer; margin: 0; }
+#contact-form .upload-button input { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; margin: 0; opacity: 0; cursor: pointer; }
+.upload-button:has(input:focus-visible) { outline: 2px solid #8a6b43; outline-offset: 4px; }
+#attachment-help { font-size: 9px; line-height: 1.8; color: var(--muted); margin-top: 8px; }
+.attachment-list { display: grid; gap: 8px; margin-top: 12px; }
+.attachment-list:empty { display: none; }
+.attachment-card { display: flex; align-items: center; gap: 13px; padding: 8px; border: 1px solid var(--line); }
+.attachment-card img, .pdf-label { width: 48px; height: 48px; object-fit: cover; flex-shrink: 0; }
+.pdf-label { display: grid; place-items: center; background: #e6e7db; font-size: 9px; }
+.attachment-card > span:not(.pdf-label) { font-size: 10px; line-height: 1.7; overflow-wrap: anywhere; }
+.attachment-card button { margin-left: auto; padding: 8px 12px; border: 0; background: none; font-size: 20px; flex-shrink: 0; }
+.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-error-summary { padding: 13px 15px; margin-bottom: 18px; border-left: 2px solid #a34635; background: #ede0d8; color: #763b30; font-size: 11px; line-height: 1.8; }
+.response-time { margin-top: 8px; color: var(--ink) !important; }
+.form-submit:disabled { opacity: .65; cursor: progress; }
+.draft-bar { margin-top: 22px; padding-top: 15px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.draft-note { color: var(--muted); font-size: 9px; line-height: 1.8; max-width: 360px; }
+.draft-clear { background: none; border: 0; padding: 0; font-size: 9px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 90px; }
+  .header-shell { --bar-height: 82px; height: 82px; }
+  .header-shell.is-compact { --bar-height: 66px; }
+  .header-shell.is-compact .brand-logo { width: 96px; }
+  .project-rail-status { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: 8px; }
+  .project-rail-dots { display: flex; gap: 5px; }
+  .project-rail-dots button { display: grid; place-items: center; border: 0; padding: 6px 4px; width: 20px; height: 23px; background: none; }
+  .project-rail-dots button::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #c2c7b9; }
+  .project-rail-dots button[aria-current=true]::before { background: #3b5142; width: 7px; height: 7px; }
+  .form-actions { align-items: flex-start; flex-direction: column; gap: 15px; }
+  .form-submit { width: 100%; }
+  #contact-form input, #contact-form textarea { font-size: 16px; }
+  .comparison-line > span { width: 36px; height: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-shell::before, .header-shell .header, .header-shell .brand-logo, #material-dark-image { transition: none; }
+  .image-frame.is-image-loading::before { animation: none; }
+}
+
+.project-dialog, .contact-dialog { scroll-padding-top: 110px; }
+@media (max-width: 700px) {
+  .project-rail-dots button { width: 24px; height: 32px; }
+  .project-dialog, .contact-dialog { scroll-padding-top: 95px; }
+}
