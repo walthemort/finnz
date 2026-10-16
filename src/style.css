@@ -193,9 +193,6 @@ body.dialog-open { overflow: hidden; }
 .project-primary { min-width: 0; }
 .project-cover { width: 100%; aspect-ratio: 3 / 4; position: relative; background: #c7b39a; }
 .dialog-image { display: block; width: 100%; height: 100%; object-fit: contain; }
-.gallery-controls { position: absolute; right: 25px; bottom: 25px; display: flex; align-items: center; gap: 15px; background: var(--paper); padding: 8px 10px; border-radius: 30px; }
-.gallery-controls button { background: none; border: 1px solid var(--line); width: 32px; height: 32px; border-radius: 50%; }
-.gallery-count { font-size: 10px; color: var(--muted); min-width: 30px; text-align: center; }
 .image-caption, .secondary-caption { display: block; margin-top: 12px; font-size: 10px; color: var(--muted); line-height: 1.8; }
 .project-story { margin-inline: 5.2%; padding-block: 48px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12%; }
 .project-story h3 { font-size: clamp(32px, 3.5vw, 50px); letter-spacing: -1.8px; font-weight: 400; margin: 19px 0 0; line-height: 1.15; }
@@ -204,10 +201,8 @@ body.dialog-open { overflow: hidden; }
 .project-facts dt { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
 .project-facts dd { font-size: 11px; line-height: 1.7; margin: 9px 0 0; }
 .project-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
-.project-secondary { margin: 0; min-width: 0; padding: 0; border: 0; background: none; text-align: left; }
+.project-secondary { margin: 0; min-width: 0; }
 .project-secondary img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: contain; }
-.project-secondary img { transition: filter .3s ease; }
-.project-secondary:hover img { filter: brightness(.94); }
 .project-disclaimer { margin: 22px 5.2% 44px; font-size: 9px; line-height: 1.8; color: var(--muted); }
 .project-contact { display: flex; justify-content: space-between; align-items: center; gap: 35px; background: #293c32; color: var(--paper); padding: 58px 5.2%; }
 .project-contact h3 { font-size: clamp(38px, 4.5vw, 66px); font-weight: 400; letter-spacing: -2.7px; line-height: 1.15; margin: 23px 0 0; max-width: 710px; }
@@ -249,7 +244,6 @@ body.dialog-open { overflow: hidden; }
   .project-lead { padding: 34px 6% 29px; }
   .project-lead h2 { font-size: 44px; margin-top: 18px; }
   .project-lead > p:last-child { font-size: 12px; margin-top: 19px; }
-  .gallery-controls { right: 15px; bottom: 15px; gap: 10px; padding: 6px 8px; }
   .image-caption { font-size: 9px; }
   .project-story { margin-inline: 6%; padding-block: 32px 12px; grid-template-columns: 1fr; gap: 24px; }
   .project-story h3 { font-size: 35px; margin-top: 14px; }
@@ -390,7 +384,6 @@ html { scroll-padding-top: 110px; }
 .header-shell .brand-logo { transition: width .25s ease; }
 .skip-link { z-index: 1000; }
 .project-rail-status { display: none; }
-.project-cover { touch-action: pan-y pinch-zoom; }
 
 /* Image placeholders use the same warm palette and retain each photo's geometry. */
 .image-frame { position: relative; }

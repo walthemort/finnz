@@ -7,7 +7,7 @@ import { projects } from './projects.js';
 import { createProjectMotion } from './project-motion.js';
 import { materialSelectorMarkup, setupMaterialSelector } from './materials.js';
 import { contactFormMarkup, setupContactForm } from './contact-form.js';
-import { setupImageLoading, setupPageNavigation, setupGallerySwipe } from './ui-enhancements.js';
+import { setupImageLoading, setupPageNavigation } from './ui-enhancements.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
 const brand = '<img class="brand-logo" src="/brand/logo-dark.webp" alt="Finnz" width="925" height="331">';
@@ -71,8 +71,8 @@ document.querySelector('#app').innerHTML = `
     <div class="project-page">
       <section class="project-lead"><p class="eyebrow" id="project-kind"></p><h2 id="project-title"></h2><p id="project-lead-text"></p></section>
       <div class="project-gallery">
-        <div class="project-primary"><div class="project-cover"><img class="dialog-image" alt="" width="1086" height="1448"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div><p class="image-caption" aria-live="polite"></p></div>
-        <div class="project-photo-grid" role="group" aria-label="Se de øvrige projektbilleder"></div>
+        <div class="project-primary"><div class="project-cover"><img class="dialog-image" alt="" width="1086" height="1448" draggable="false"></div><p class="image-caption"></p></div>
+        <div class="project-photo-grid" role="group" aria-label="Supplerende projektbilleder"></div>
       </div>
       <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
       <p class="project-disclaimer">Fotografier af et udført Finnz-projekt, redigeret med AI.</p>
@@ -120,7 +120,6 @@ const projectMotion = createProjectMotion({
   getCard: () => document.querySelector(`[data-project="${projectIndex}"]`),
 });
 let projectIndex = 0;
-let photoIndex = 0;
 const contactDialog = document.querySelector('#contact-dialog');
 let returnToMaterials = false;
 function syncDialogs() {
@@ -172,25 +171,6 @@ contactDialog.addEventListener('close', () => {
   });
 });
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-function showPhoto(index) {
-  const project = projects[projectIndex];
-  photoIndex = (index + project.images.length) % project.images.length;
-  const photo = project.images[photoIndex];
-  const image = gallery.querySelector('.dialog-image');
-  image.src = photo.src;
-  image.alt = photo.alt;
-  gallery.querySelector('.image-caption').textContent = photo.caption;
-  gallery.querySelector('.gallery-count').textContent = `${photoIndex + 1} / ${project.images.length}`;
-  const otherPhotos = project.images.map((photo, index) => ({ ...photo, index })).filter(photo => photo.index !== photoIndex);
-  gallery.querySelectorAll('[data-photo]').forEach((button, index) => {
-    const photo = otherPhotos[index];
-    button.dataset.photo = photo.index;
-    button.setAttribute('aria-label', `Vis billede ${photo.index + 1}: ${photo.caption}`);
-    const preview = button.querySelector('img');
-    preview.src = photo.src; preview.alt = photo.alt;
-    button.querySelector('.secondary-caption').textContent = photo.caption;
-  });
-}
 function showProject(index) {
   projectIndex = (index + projects.length) % projects.length;
   const project = projects[projectIndex];
@@ -207,24 +187,23 @@ function showProject(index) {
     const dd = document.createElement('dd'); dd.textContent = value;
     row.append(dt, dd); return row;
   }));
-  gallery.querySelector('.project-photo-grid').replaceChildren(...project.images.slice(1).map(() => {
-    const button = document.createElement('button');
-    button.type = 'button'; button.className = 'project-secondary'; button.dataset.photo = '';
-    const image = document.createElement('img'); image.width = 1086; image.height = 1448;
-    const caption = document.createElement('span'); caption.className = 'secondary-caption';
-    button.append(image, caption);
-    button.addEventListener('click', () => showPhoto(Number(button.dataset.photo)));
-    return button;
+  const primary = project.images.find(photo => photo.src === project.image) || project.images[0];
+  const image = gallery.querySelector('.dialog-image');
+  image.src = primary.src; image.alt = primary.alt;
+  gallery.querySelector('.image-caption').textContent = primary.caption;
+  gallery.querySelector('.project-photo-grid').replaceChildren(...project.images.filter(photo => photo !== primary).map(photo => {
+    const figure = document.createElement('figure'); figure.className = 'project-secondary';
+    const image = document.createElement('img');
+    image.src = photo.src; image.alt = photo.alt; image.width = 1086; image.height = 1448; image.draggable = false;
+    const caption = document.createElement('figcaption'); caption.className = 'secondary-caption'; caption.textContent = photo.caption;
+    figure.append(image, caption); return figure;
   }));
   gallery.querySelector('.next-project-title').textContent = projects[(projectIndex + 1) % projects.length].title;
-  showPhoto(0);
   gallery.scrollTop = 0;
 }
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
     showProject(Number(button.dataset.project));
-    const matchingPhoto = projects[projectIndex].images.findIndex(photo => photo.src === projects[projectIndex].image);
-    showPhoto(Math.max(0, matchingPhoto));
     projectMotion.open(button, () => {
       gallery.showModal();
       syncDialogs();
@@ -238,8 +217,6 @@ gallery.addEventListener('cancel', event => {
   event.preventDefault();
   projectMotion.close();
 });
-gallery.querySelector('.gallery-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
-gallery.querySelector('.gallery-next').addEventListener('click', () => showPhoto(photoIndex + 1));
 gallery.querySelector('.next-project').addEventListener('click', () => {
   showProject(projectIndex + 1);
   gallery.querySelector('.dialog-close').focus({ preventScroll: true });
@@ -248,13 +225,6 @@ gallery.querySelector('.project-contact-button').addEventListener('click', () =>
   openContact({ project: projects[projectIndex] });
 });
 gallery.addEventListener('close', syncDialogs);
-gallery.addEventListener('keydown', event => {
-  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-    event.preventDefault();
-    showPhoto(photoIndex + (event.key === 'ArrowRight' ? 1 : -1));
-  }
-});
-
 // The uploaded F follows a mouse directly: no lag, no interference with touch or keyboard.
 const cursor = document.querySelector('.brand-cursor');
 const cursorMedia = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
@@ -283,7 +253,6 @@ materialController = setupMaterialSelector(({ material, finish }) => {
   enquiry.invalidate();
 }, () => openContact());
 if (enquiry.restoredColor) materialController.select(enquiry.restoredColor);
-setupGallerySwipe(gallery.querySelector('.project-cover'), direction => showPhoto(photoIndex + direction));
 setupImageLoading();
 setupPageNavigation();
 

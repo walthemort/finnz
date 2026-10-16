@@ -56,20 +56,3 @@ export function setupPageNavigation() {
   }
   rail.addEventListener('scroll', updateRail, { passive: true }); updateRail();
 }
-export function setupGallerySwipe(cover, onSwipe) {
-  let start = null;
-  cover.querySelector('img').draggable = false;
-  cover.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse' || !event.isPrimary || event.target.closest('button')) return;
-    start = { id: event.pointerId, x: event.clientX, y: event.clientY, time: performance.now() };
-    cover.setPointerCapture(event.pointerId);
-  });
-  cover.addEventListener('pointerup', event => {
-    if (!start || start.id !== event.pointerId) return;
-    const dx = event.clientX - start.x, dy = event.clientY - start.y;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3 && performance.now() - start.time < 900) onSwipe(dx < 0 ? 1 : -1);
-    start = null;
-  });
-  cover.addEventListener('pointercancel', () => { start = null; });
-  cover.addEventListener('lostpointercapture', () => { start = null; });
-}

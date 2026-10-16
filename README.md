@@ -57,7 +57,7 @@ Kontakt fra et projekt åbner oven på projektvinduet. Lukning gendanner fokus o
 
 `src/materials.js` viser kun **Lys** og **Sort**, baseret på brugerens afskærmning omkring affaldsbeholdere. Der er intet forudvalgt farveønske. Billederne er vejledende AI-visualiseringer uden løfte om en bestemt træsort eller behandling. En skyder sammenligner billederne i identiske dimensioner; sammenligning vælger ikke en farve på kundens vegne. Farvevalg giver en blød overgang, sender ønsket videre til formularen og ugyldiggør tidligere klargjort output.
 
-`src/ui-enhancements.js` giver projektgalleriet vandret swipe, mens lodret scroll og zoombevægelser bevares. Pilknapper, piletaster og de øvrige billeder virker stadig. Mobilens projektrække har dots, tæller og swipe-hint. Topbjælken bliver kompakt og følger med ved scroll uden at flytte sidens indhold. Billedpladsholdere bevarer layoutet under indlæsning; fejl får en besked. Reduceret bevægelse understøttes.
+`src/ui-enhancements.js` håndterer navigation og billedindlæsning. Mobilens projektrække på forsiden kan stadig swipes og har dots, tæller og swipe-hint. Inde i et projekt står alle billeder fast uden billedskift, pile eller swipe-navigation. Topbjælken bliver kompakt og følger med ved scroll uden at flytte sidens indhold. Billedpladsholdere bevarer layoutet under indlæsning; fejl får en besked. Reduceret bevægelse understøttes.
 
 ## Logo, billeder og projekter
 
@@ -65,7 +65,7 @@ Kontakt fra et projekt åbner oven på projektvinduet. Lukning gendanner fokus o
 - F-cursoren og faviconet bruger `mark-outlined.webp`. Favicon er en kvadratisk SVG-wrapper med `preserveAspectRatio="xMidYMid meet"`, genereret af `scripts/generate-favicon.mjs`.
 - Gamle SVG-wordmarks har levende tekst med `font-family: Amboy-Black`. De kræver den font. Nye outlined SVG'er skal indeholde bogstavernes paths, før de bruges i stedet for WebP.
 - `src/projects.js` indeholder to udførte Finnz-projekter fra brugerens fotos: mørkt havehus og terrasse med træafskærmning, tre AI-redigerede billeder hver. Der opfindes ikke træsort, dimensioner, adresse, kunde eller CVR. PNG-pakker ligger i `downloads/`.
-- Galleriet viser alle tre portrætfotos samlet og uden stræk: på desktop det valgte billede lidt større til venstre, to vinkler ved siden af; på mobil hovedbillede og to mindre vinkler. De mindre billeder bytter med hovedbilledet ved klik.
+- Galleriet viser alle tre portrætfotos samlet og uden stræk: på desktop hovedbilledet lidt større til venstre, to vinkler ved siden af; på mobil hovedbillede og to mindre vinkler. Billederne har faste pladser og billedtekster; klik og piletaster bytter dem ikke rundt. “Næste projekt” skifter stadig til det andet projekt.
 - `src/project-motion.js` animerer kortets billede og papir ind i/ud af projektvinduet. Logo, luk-knap og Escape bruger samme lukning. Lukning under åbning vender animationen; midlertidige lag ryddes op. Materialenavigation lukker straks for at bevare fokus.
 - `garden-hero.webp` er en mærket AI-genereret stemningsvisualisering. De tidligere billeder af trælameller og høvlearbejde er bevaret som filer, men vises ikke. Kontaktvinduet viser kun kontaktoplysninger og formular.
 - `public/social/finnz-preview.jpg` og Open Graph-/Twitter-metadata giver et delingsbillede. Metadata indeholder absolutte URL'er; bekræft domæne og HTTPS før lancering. Delingstjenester kan cache gamle previews.
@@ -76,6 +76,6 @@ Introen vises ved hver indlæsning: normalt minimum 1,1 sek., parathedsfrist 2,2
 
 `npm test` kører ti backendtests: validering, filgrænser/signaturer, korrekt mailpayload, Origin/spamfælde, manglende opsætning, mailfejl/genforsøg, hastighedsbegrænsning og HTTP-grænser for store uploads. Testene sender ingen rigtige mails.
 
-Chromiumkontrol omfatter 320/390/768/1440 px, formular og kladdegendannelse, callbacks, opgavetyper, mål, vedhæftninger og fjernelse, simuleret fejlsvar/kvittering, kopiering, farvevalg/-sammenligning, native touch-swipe og lodret scroll, kompakt header, projektanimationer, stablede vinduer, pladsholdere ved langsomme/fejlede billeder, delingsmetadata og fravær af JavaScriptfejl/horisontalt overflow.
+Chromiumkontrol omfatter 320/390/768/1440 px, formular og kladdegendannelse, callbacks, opgavetyper, mål, vedhæftninger og fjernelse, simuleret fejlsvar/kvittering, kopiering, farvevalg/-sammenligning, touch-scroll, faste projektbilleder ved klik/piletaster/swipe, kompakt header, projektanimationer, stablede vinduer, pladsholdere ved langsomme/fejlede billeder, delingsmetadata og fravær af JavaScriptfejl/horisontalt overflow.
 
 Hjemmesiden er ikke deployet. Publicering af cloudmiljøet er ikke publicering af hjemmesiden.
