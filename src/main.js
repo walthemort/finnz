@@ -2,6 +2,7 @@ import '@fontsource/manrope/latin-400.css';
 import '@fontsource/manrope/latin-500.css';
 import '@fontsource/manrope/latin-600.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
+import '@fontsource/caveat/latin-400.css';
 import './style.css';
 import { projects } from './projects.js';
 import { createProjectMotion } from './project-motion.js';
@@ -12,6 +13,7 @@ import { setupImageLoading, setupPageNavigation } from './ui-enhancements.js';
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
 const brand = '<img class="brand-logo" src="/brand/logo-dark.webp" alt="Finnz" width="925" height="331">';
 const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'zfzi@hotmail.com';
+const projectSlotCount = 8;
 const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 
 document.querySelector('#app').innerHTML = `
@@ -30,19 +32,22 @@ document.querySelector('#app').innerHTML = `
       <p class="hero-description intro-reveal">Personlige løsninger i træ. Skabt til dit rum.</p>
     </section>
     <figure class="hero-image-section">
-      <div class="hero-image-wrap">
+      <div class="hero-image-wrap"><div class="hero-parallax">
         <img class="hero-image" src="/images/editorial/garden-hero.webp" alt="Stemningsvisualisering af sort træbeklædning og lys træafskærmning i grønne omgivelser" width="1536" height="1024" fetchpriority="high">
-      </div>
+      </div></div>
       <figcaption>AI-genereret stemningsvisualisering</figcaption>
     </figure>
     <section class="projects reveal" id="projekter" aria-labelledby="projects-title">
-      <div class="projects-heading"><div><p class="eyebrow">UDVALGTE PROJEKTER</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length).padStart(2, '0')}</span></div>
+      <div class="projects-heading"><div><p class="eyebrow">UDVALGTE PROJEKTER</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projectSlotCount).padStart(2, '0')}</span></div>
       <div class="project-grid">
-        ${projects.map((project, index) => `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Se ${project.title.toLowerCase()}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1086" height="1448" loading="lazy"><span class="project-open">${arrow}</span></span><span class="project-meta"><span class="eyebrow">${project.kind}</span><span class="project-number">0${index + 1}</span></span><span class="project-title">${project.title}</span></button>`).join('')}
-        <button class="project-invite" type="button" data-open-contact aria-haspopup="dialog"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632" loading="lazy"><span>Det næste<br>kunne være <em>dit.</em></span><span class="invite-link">Lad os høre din idé ${arrow}</span></button>
+        ${Array.from({ length: projectSlotCount }, (_, index) => {
+          const project = projects[index];
+          const number = String(index + 1).padStart(2, '0');
+          return project ? `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Åbn projekt: ${project.title}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1086" height="1448" loading="lazy"></span><span class="project-number">${number}</span><span class="project-card-copy"><span class="eyebrow">${project.kind}</span><span class="project-title">${project.title}</span><span class="project-read">Læs om projektet ${arrow}</span></span></button>` : `<div class="project-slot" aria-label="Projektplads ${number}, flere projekter på vej"><span class="project-number">${number}</span><img src="/brand/mark-dark.webp" alt="" width="389" height="567" loading="lazy"><span class="project-slot-label">På vej</span></div>`;
+        }).join('')}
       </div>
-      <div class="project-rail-status"><span>Træk for at se flere →</span><div class="project-rail-dots" role="group" aria-label="Vælg projektkort"></div><span class="project-rail-counter"></span></div>
-      <p class="project-note">Udførte Finnz-projekter. Fotografierne er redigeret med AI.</p>
+      <div class="project-rail-status"><span>Tryk for at udfolde · swipe for flere</span><div class="project-rail-dots" role="group" aria-label="Vælg projektkort"></div><span class="project-rail-counter"></span></div>
+      <p class="project-note">${projects.length} udførte Finnz-projekter — flere følger. Fotografierne er redigeret med AI.</p>
     </section>
     ${materialSelectorMarkup(arrow)}
     <section class="contact reveal" id="kontakt" aria-labelledby="contact-title">
@@ -199,10 +204,16 @@ function showProject(index) {
     figure.append(image, caption); return figure;
   }));
   gallery.querySelector('.next-project-title').textContent = projects[(projectIndex + 1) % projects.length].title;
+  projectNavigation.activate(projectIndex, { immediate: true });
   gallery.scrollTop = 0;
 }
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
+    const touchLayout = matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (touchLayout && !button.classList.contains('is-active')) {
+      projectNavigation.activate(Number(button.dataset.project), { scroll: true });
+      return;
+    }
     showProject(Number(button.dataset.project));
     projectMotion.open(button, () => {
       gallery.showModal();
@@ -233,7 +244,7 @@ const hideCursor = () => document.documentElement.classList.remove('has-brand-cu
 window.addEventListener('pointermove', event => {
   if (!cursorMedia.matches || event.pointerType !== 'mouse' || !cursorImage.complete || !cursorImage.naturalWidth) return hideCursor();
   cursor.style.transform = `translate3d(${event.clientX - 3}px, ${event.clientY - 3}px, 0)`;
-  const isTextInput = Boolean(event.target.closest('input, textarea, select'));
+  const isTextInput = Boolean(event.target.closest('input, textarea, select, .comparison-drag-surface'));
   if (isTextInput) return hideCursor();
   cursor.classList.toggle('is-link', Boolean(event.target.closest('a, button, summary')));
   document.documentElement.classList.add('has-brand-cursor');
@@ -254,7 +265,7 @@ materialController = setupMaterialSelector(({ material, finish }) => {
 }, () => openContact());
 if (enquiry.restoredColor) materialController.select(enquiry.restoredColor);
 setupImageLoading();
-setupPageNavigation();
+const projectNavigation = setupPageNavigation();
 
 // A visible branded intro on every page load, including cached reloads.
 function startIntro() {
