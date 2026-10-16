@@ -3,13 +3,10 @@ import '@fontsource/manrope/latin-500.css';
 import '@fontsource/manrope/latin-600.css';
 import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import './style.css';
+import { projects } from './projects.js';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
 const brand = '<img class="brand-logo" src="/brand/logo-black.webp" alt="Finnz" width="925" height="331">';
-const projects = [
-  { title: 'Detaljen gør forskellen', kind: 'Møbler & materialer', image: '/images/detail.webp', alt: 'Stemningsvisualisering af en samling i et egetræsbord' },
-  { title: 'Træ, der samler et rum', kind: 'Rum & indretning', image: '/images/interior.webp', alt: 'Stemningsvisualisering af et egetræsmøbel i et lyst rum' },
-];
 const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || '';
 const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 
@@ -71,9 +68,20 @@ document.querySelector('#app').innerHTML = `
     <a class="back-top" href="#top">Til toppen ↑</a>
   </footer>
   <dialog class="project-dialog" id="project-dialog" aria-labelledby="project-title">
-    <button class="dialog-close" aria-label="Luk projektvisning">×</button>
-    <img class="dialog-image" alt="" width="1200" height="900">
-    <div class="dialog-content"><p class="eyebrow" id="project-kind"></p><h2 id="project-title"></h2><p class="project-note">Stemningsvisualisering — inspiration til din egen løsning.</p><div class="dialog-bottom"><a class="text-link" href="#kontakt">Tal om noget lignende ${arrow}</a><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div></div>
+    <header class="project-header">
+      <span class="brand">${brand}</span><span class="eyebrow project-position"></span>
+      <button class="dialog-close" aria-label="Luk projektvisning"><span>Luk projekt</span><span aria-hidden="true">×</span></button>
+    </header>
+    <div class="project-page">
+      <section class="project-lead"><p class="eyebrow" id="project-kind"></p><h2 id="project-title"></h2><p id="project-lead-text"></p></section>
+      <div class="project-cover"><img class="dialog-image" alt="" width="1536" height="1024"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div>
+      <div class="project-gallery-bar"><p class="image-caption"></p><div class="project-thumbnails" aria-label="Vælg projektbillede"></div></div>
+      <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
+      <figure class="project-secondary"><img alt="" width="1536" height="1024" loading="lazy"><figcaption></figcaption></figure>
+      <p class="project-disclaimer">Koncept & inspiration. Billederne er genererede stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
+      <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button">Fortæl os om din idé ${arrow}</button></section>
+      <button class="next-project"><span><span class="eyebrow">NÆSTE INSPIRATION</span><span class="next-project-title"></span></span>${arrow}</button>
+    </div>
   </dialog>
   <div class="brand-cursor" aria-hidden="true"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632"></div>
 `;
@@ -100,18 +108,58 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// Native dialog keeps focus and Escape handling accessible to keyboard users.
+// A full-screen project page with native modal focus handling.
 const gallery = document.querySelector('#project-dialog');
 let projectIndex = 0;
+let photoIndex = 0;
+let contactRequested = false;
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+function showPhoto(index) {
+  const project = projects[projectIndex];
+  photoIndex = (index + project.images.length) % project.images.length;
+  const photo = project.images[photoIndex];
+  const image = gallery.querySelector('.dialog-image');
+  image.src = photo.src;
+  image.alt = photo.alt;
+  gallery.querySelector('.image-caption').textContent = photo.caption;
+  gallery.querySelector('.gallery-count').textContent = `${photoIndex + 1} / ${project.images.length}`;
+  gallery.querySelectorAll('[data-photo]').forEach(button => {
+    button.setAttribute('aria-pressed', String(Number(button.dataset.photo) === photoIndex));
+  });
+}
 function showProject(index) {
   projectIndex = (index + projects.length) % projects.length;
   const project = projects[projectIndex];
-  const image = gallery.querySelector('.dialog-image');
-  image.src = project.image;
-  image.alt = project.alt;
   gallery.querySelector('#project-title').textContent = project.title;
   gallery.querySelector('#project-kind').textContent = project.kind;
-  gallery.querySelector('.gallery-count').textContent = `${projectIndex + 1} / ${projects.length}`;
+  gallery.querySelector('.project-position').textContent = `INSPIRATION ${String(projectIndex + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
+  gallery.querySelector('#project-lead-text').textContent = project.lead;
+  gallery.querySelector('#project-story-title').textContent = project.storyTitle;
+  gallery.querySelector('#project-description').textContent = project.description;
+  const facts = gallery.querySelector('.project-facts');
+  facts.replaceChildren(...project.details.map(([label, value]) => {
+    const row = document.createElement('div');
+    const dt = document.createElement('dt'); dt.textContent = label;
+    const dd = document.createElement('dd'); dd.textContent = value;
+    row.append(dt, dd); return row;
+  }));
+  const thumbnails = gallery.querySelector('.project-thumbnails');
+  thumbnails.replaceChildren(...project.images.map((photo, index) => {
+    const button = document.createElement('button');
+    button.dataset.photo = index;
+    button.setAttribute('aria-label', `Vis billede ${index + 1}: ${photo.caption}`);
+    const image = document.createElement('img'); image.src = photo.src; image.alt = '';
+    image.width = 84; image.height = 58; button.append(image);
+    button.addEventListener('click', () => showPhoto(index));
+    return button;
+  }));
+  const secondary = project.images[1] || project.images[0];
+  const secondaryImage = gallery.querySelector('.project-secondary img');
+  secondaryImage.src = secondary.src; secondaryImage.alt = secondary.alt;
+  gallery.querySelector('.project-secondary figcaption').textContent = secondary.caption;
+  gallery.querySelector('.next-project-title').textContent = projects[(projectIndex + 1) % projects.length].title;
+  showPhoto(0);
+  gallery.scrollTop = 0;
 }
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
@@ -119,25 +167,42 @@ document.querySelectorAll('[data-project]').forEach(button => {
     gallery.showModal();
     gallery.append(cursor);
     document.body.classList.add('dialog-open');
+    gallery.scrollTop = 0;
   });
 });
 gallery.querySelector('.dialog-close').addEventListener('click', () => gallery.close());
-gallery.querySelector('.gallery-prev').addEventListener('click', () => showProject(projectIndex - 1));
-gallery.querySelector('.gallery-next').addEventListener('click', () => showProject(projectIndex + 1));
-gallery.querySelector('a').addEventListener('click', () => gallery.close());
+gallery.querySelector('.gallery-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
+gallery.querySelector('.gallery-next').addEventListener('click', () => showPhoto(photoIndex + 1));
+gallery.querySelector('.next-project').addEventListener('click', () => {
+  showProject(projectIndex + 1);
+  gallery.querySelector('.dialog-close').focus({ preventScroll: true });
+});
+gallery.querySelector('.project-contact-button').addEventListener('click', () => {
+  contactRequested = true;
+  gallery.close();
+});
 gallery.addEventListener('close', () => {
   document.body.classList.remove('dialog-open');
   document.body.append(cursor);
-});
-gallery.addEventListener('click', event => {
-  if (event.target !== gallery) return;
-  const rect = gallery.getBoundingClientRect();
-  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) gallery.close();
+  if (!contactRequested) return;
+  contactRequested = false;
+  const panel = document.querySelector('.contact-form-panel');
+  const message = document.querySelector('[name="message"]');
+  panel.open = true;
+  if (!message.value.trim()) {
+    message.value = `Jeg er inspireret af “${projects[projectIndex].title}” og vil gerne høre om en lignende løsning.\n\nMin idé: `;
+    message.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  requestAnimationFrame(() => {
+    document.querySelector('#kontakt').scrollIntoView({ behavior: reducedMotion() ? 'instant' : 'smooth', block: 'start' });
+    const name = document.querySelector('[name="name"]');
+    (name.value.trim() ? message : name).focus({ preventScroll: true });
+  });
 });
 gallery.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault();
-    showProject(projectIndex + (event.key === 'ArrowRight' ? 1 : -1));
+    showPhoto(photoIndex + (event.key === 'ArrowRight' ? 1 : -1));
   }
 });
 
@@ -201,32 +266,27 @@ contactForm.addEventListener('input', event => {
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
 });
 
-// A first-visit intro follows actual readiness, never an artificial loading percentage.
+// A visible branded intro on every page load, including cached reloads.
 function startIntro() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  try { if (sessionStorage.getItem('finnz-intro-seen')) return; } catch { /* Storage is optional. */ }
-  const intro = document.createElement('div');
-  intro.className = 'site-intro';
-  intro.setAttribute('aria-hidden', 'true');
-  intro.innerHTML = `${brand}<span class="intro-rule"></span><span class="eyebrow">TRÆ & DESIGN</span>`;
-  document.body.append(intro);
-  document.documentElement.classList.add('is-intro');
+  const intro = document.querySelector('.site-intro');
+  if (!intro) return;
+  const minimum = reducedMotion() ? 350 : 1100;
   let done = false;
   const finish = () => {
     if (done) return;
     done = true;
     document.documentElement.classList.remove('is-intro');
     intro.classList.add('is-ready');
-    try { sessionStorage.setItem('finnz-intro-seen', '1'); } catch { /* Storage is optional. */ }
     window.removeEventListener('pointerdown', finish);
     window.removeEventListener('keydown', finish);
-    setTimeout(() => intro.remove(), 550);
+    setTimeout(() => intro.remove(), reducedMotion() ? 0 : 550);
   };
   window.addEventListener('pointerdown', finish, { once: true });
   window.addEventListener('keydown', finish, { once: true });
   const images = [document.querySelector('.hero-image'), intro.querySelector('img')];
   const ready = Promise.allSettled([document.fonts.ready, ...images.map(image => image.decode())]);
   const deadline = new Promise(resolve => setTimeout(resolve, 2200));
-  Promise.race([ready, deadline]).then(finish);
+  const visibleIntro = new Promise(resolve => setTimeout(resolve, minimum));
+  Promise.all([Promise.race([ready, deadline]), visibleIntro]).then(finish);
 }
 startIntro();

@@ -1,16 +1,26 @@
 <!doctype html>
-<html lang="da">
+<html lang="da" class="is-intro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f3ed" />
     <meta name="description" content="Finnz Træ & Design. Personlige løsninger i træ med plads til materialet, detaljen og din idé." />
     <title>Finnz Træ & Design — Træ med karakter</title>
+    <link rel="preload" as="image" href="/brand/logo-black.webp" />
+    <style>
+      .site-intro{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:27px;background:#f5f3ed;pointer-events:none}
+      .site-intro .brand-logo{display:block;width:180px;height:auto}
+    </style>
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=2" />
   </head>
   <body>
+    <div class="site-intro" aria-hidden="true"><img class="brand-logo" src="/brand/logo-black.webp" alt="" width="925" height="331"><span class="intro-rule"></span><span class="eyebrow">TRÆ & DESIGN</span></div>
     <a class="skip-link" href="#indhold">Gå til indhold</a>
     <div id="app"></div>
+    <script>
+      // Keep the intro from getting stuck if the application module fails to load.
+      setTimeout(function(){document.querySelector('.site-intro')?.remove();document.documentElement.classList.remove('is-intro')},5000);
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
