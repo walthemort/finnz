@@ -72,7 +72,7 @@ h1 em { font-size: 1.17em; letter-spacing: -.055em; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 63%;
+  object-position: center 46%;
   animation: image-in 1.8s cubic-bezier(.15,.6,.25,1) both;
 }
 figcaption { text-align: right; font-size: 8px; color: var(--muted); margin-top: 10px; letter-spacing: .4px; }
@@ -127,7 +127,7 @@ figcaption { text-align: right; font-size: 8px; color: var(--muted); margin-top:
   .hero-description { font-size: 11px; margin-top: 20px; }
   .hero-image-section { margin-inline: 10px; }
   .hero-image-wrap { height: 390px; }
-  .hero-image { object-position: 57% center; }
+  .hero-image { object-position: 42% center; }
   figcaption { font-size: 7px; margin-top: 8px; }
   .contact { padding-block: 43px 44px; flex-direction: column; align-items: flex-start; gap: 28px; }
   .contact h2 { font-size: 49px; letter-spacing: -2px; margin-top: 14px; }
@@ -291,6 +291,9 @@ body.dialog-open { overflow: hidden; }
 .contact-dialog-call > .eyebrow { font-size: 7px; color: var(--muted); }
 .contact-dialog-call > a { display: inline-flex; align-items: center; gap: 25px; font-size: 23px; letter-spacing: -.6px; }
 .contact-dialog-call > a svg { width: 19px; height: 19px; }
+.contact-timber { margin-top: 38px; max-width: 440px; }
+.contact-timber img { width: 100%; height: 160px; object-fit: cover; }
+.contact-timber figcaption { font-size: 7px; line-height: 1.7; }
 #contact-form { min-width: 0; }
 .form-material { background: #e6e7db; padding: 17px 20px; margin-bottom: 24px; }
 .form-material > .eyebrow { font-size: 7px; color: var(--muted); }
@@ -380,6 +383,7 @@ body.dialog-open { overflow: hidden; }
   .contact-dialog-intro > p:not(.eyebrow) { font-size: 11px; margin-top: 19px; }
   .contact-dialog-call { margin-top: 24px; gap: 10px; }
   .contact-dialog-call > a { font-size: 21px; }
+  .contact-timber { display: none; }
 }
 
 .project-home { border: 0; background: none; padding: 0; flex-shrink: 0; }

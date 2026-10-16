@@ -28,9 +28,9 @@ document.querySelector('#app').innerHTML = `
     </section>
     <figure class="hero-image-section">
       <div class="hero-image-wrap">
-        <img class="hero-image" src="/images/interior.webp" alt="Stemningsvisualisering af et lyst rum med et egetræsmøbel og naturligt lys" width="1536" height="1024" fetchpriority="high">
+        <img class="hero-image" src="/images/editorial/workshop.webp" alt="Hænder fører en høvl over et bræt på en arbejdsbænk med træspåner" width="1536" height="1024" fetchpriority="high">
       </div>
-      <figcaption>Stemningsvisualisering</figcaption>
+      <figcaption>Håndværk i træ · AI-redigeret stemningsfoto</figcaption>
     </figure>
     <section class="projects reveal" id="projekter" aria-labelledby="projects-title">
       <div class="projects-heading"><div><p class="eyebrow">UDVALGTE PROJEKTER</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length).padStart(2, '0')}</span></div>
@@ -78,7 +78,7 @@ document.querySelector('#app').innerHTML = `
   <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="form-title">
     <header class="project-header contact-header"><span class="brand">${brand}</span><span class="eyebrow project-position">KONTAKT</span><button class="dialog-close" aria-label="Luk kontaktformular"><span>Luk kontakt</span><span aria-hidden="true">×</span></button></header>
     <div class="contact-dialog-content">
-      <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div></div>
+      <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div><figure class="contact-timber"><img src="/images/editorial/timber.webp" alt="Lodrette trælameller med naturlig åretegning og bløde skygger" width="1536" height="1024" loading="lazy"><figcaption>Træets struktur · AI-redigeret stemningsfoto</figcaption></figure></div>
         <form id="contact-form" aria-labelledby="form-title">
           <div class="form-material"><span class="eyebrow">DIT MATERIALEØNSKE</span><div><span id="material-summary">Vi finder materiale og overflade sammen.</span><button class="material-edit" type="button">Tilpas ↗</button></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
           <div class="form-fields">
