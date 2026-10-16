@@ -83,7 +83,7 @@ document.querySelector('#app').innerHTML = `
   <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="form-title">
     <header class="project-header contact-header"><span class="brand">${brand}</span><span class="eyebrow project-position">KONTAKT</span><button class="dialog-close" aria-label="Luk kontaktformular"><span>Luk kontakt</span><span aria-hidden="true">×</span></button></header>
     <div class="contact-dialog-content">
-      <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div><figure class="contact-timber"><img src="/images/editorial/timber.webp" alt="Lodrette trælameller med naturlig åretegning og bløde skygger" width="1536" height="1024" loading="lazy"><figcaption>Træets struktur · AI-redigeret stemningsfoto</figcaption></figure></div>
+      <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div></div>
         ${contactFormMarkup(arrow)}
     </div>
   </dialog>

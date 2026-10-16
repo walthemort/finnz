@@ -1,6 +1,6 @@
 export function setupImageLoading() {
   const watched = new WeakMap();
-  const frames = '.hero-image-wrap, .project-image, .project-cover, .project-secondary, .material-stage, .contact-timber';
+  const frames = '.hero-image-wrap, .project-image, .project-cover, .project-secondary, .material-stage';
   function watch(img) {
     const source = img.getAttribute('src');
     const frame = img.closest(frames);

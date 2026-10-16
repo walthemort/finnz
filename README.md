@@ -67,7 +67,7 @@ Kontakt fra et projekt åbner oven på projektvinduet. Lukning gendanner fokus o
 - `src/projects.js` indeholder to udførte Finnz-projekter fra brugerens fotos: mørkt havehus og terrasse med træafskærmning, tre AI-redigerede billeder hver. Der opfindes ikke træsort, dimensioner, adresse, kunde eller CVR. PNG-pakker ligger i `downloads/`.
 - Galleriet viser alle tre portrætfotos samlet og uden stræk: på desktop det valgte billede lidt større til venstre, to vinkler ved siden af; på mobil hovedbillede og to mindre vinkler. De mindre billeder bytter med hovedbilledet ved klik.
 - `src/project-motion.js` animerer kortets billede og papir ind i/ud af projektvinduet. Logo, luk-knap og Escape bruger samme lukning. Lukning under åbning vender animationen; midlertidige lag ryddes op. Materialenavigation lukker straks for at bevare fokus.
-- `garden-hero.webp` er en mærket AI-genereret stemningsvisualisering. `timber.webp` i kontaktvinduet stammer fra brugerens gamle site. Den tidligere høvleillustration er bevaret som fil, men vises ikke.
+- `garden-hero.webp` er en mærket AI-genereret stemningsvisualisering. De tidligere billeder af trælameller og høvlearbejde er bevaret som filer, men vises ikke. Kontaktvinduet viser kun kontaktoplysninger og formular.
 - `public/social/finnz-preview.jpg` og Open Graph-/Twitter-metadata giver et delingsbillede. Metadata indeholder absolutte URL'er; bekræft domæne og HTTPS før lancering. Delingstjenester kan cache gamle previews.
 
 Introen vises ved hver indlæsning: normalt minimum 1,1 sek., parathedsfrist 2,2 sek. plus udtoning; reduceret bevægelse minimum 0,35 sek. Interaktion afslutter den. En separat HTML-sikring fjerner den efter fem sekunder ved modulfejl.
