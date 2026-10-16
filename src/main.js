@@ -15,7 +15,7 @@ const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 document.querySelector('#app').innerHTML = `
   <header class="header" id="top">
     <a class="brand" href="#top" aria-label="Finnz Træ & Design, til toppen">${brand}</a>
-    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog" aria-controls="contact-dialog">Lad os tale sammen ${arrow}</button></nav>
+    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog" aria-controls="contact-dialog">Lad os tale sammen ${arrow}</button></nav>
   </header>
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
@@ -33,12 +33,12 @@ document.querySelector('#app').innerHTML = `
       <figcaption>Stemningsvisualisering</figcaption>
     </figure>
     <section class="projects reveal" id="projekter" aria-labelledby="projects-title">
-      <div class="projects-heading"><div><p class="eyebrow">INSPIRATION I TRÆ</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length + 1).padStart(2, '0')}</span></div>
+      <div class="projects-heading"><div><p class="eyebrow">UDVALGTE PROJEKTER</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length).padStart(2, '0')}</span></div>
       <div class="project-grid">
-        ${projects.map((project, index) => `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Se ${project.title.toLowerCase()}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1024" height="1024" loading="lazy"><span class="project-open">${arrow}</span></span><span class="project-meta"><span class="eyebrow">${project.kind}</span><span class="project-number">0${index + 1}</span></span><span class="project-title">${project.title}</span></button>`).join('')}
+        ${projects.map((project, index) => `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Se ${project.title.toLowerCase()}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1086" height="1448" loading="lazy"><span class="project-open">${arrow}</span></span><span class="project-meta"><span class="eyebrow">${project.kind}</span><span class="project-number">0${index + 1}</span></span><span class="project-title">${project.title}</span></button>`).join('')}
         <button class="project-invite" type="button" data-open-contact aria-haspopup="dialog"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632" loading="lazy"><span>Det næste<br>kunne være <em>dit.</em></span><span class="invite-link">Lad os høre din idé ${arrow}</span></button>
       </div>
-      <p class="project-note">Billederne er stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
+      <p class="project-note">Udførte Finnz-projekter. Fotografierne er redigeret med AI.</p>
     </section>
     ${materialSelectorMarkup(arrow)}
     <section class="contact reveal" id="kontakt" aria-labelledby="contact-title">
@@ -66,13 +66,13 @@ document.querySelector('#app').innerHTML = `
     </header>
     <div class="project-page">
       <section class="project-lead"><p class="eyebrow" id="project-kind"></p><h2 id="project-title"></h2><p id="project-lead-text"></p></section>
-      <div class="project-cover"><img class="dialog-image" alt="" width="1536" height="1024"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div>
+      <div class="project-cover"><img class="dialog-image" alt="" width="1086" height="1448"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div>
       <div class="project-gallery-bar"><p class="image-caption"></p><div class="project-thumbnails" aria-label="Vælg projektbillede"></div></div>
       <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
-      <figure class="project-secondary"><img alt="" width="1536" height="1024" loading="lazy"><figcaption></figcaption></figure>
-      <p class="project-disclaimer">Koncept & inspiration. Billederne er genererede stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
+      <div class="project-photo-grid"></div>
+      <p class="project-disclaimer">Fotografier af et udført Finnz-projekt, redigeret med AI.</p>
       <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button" type="button" aria-haspopup="dialog" aria-controls="contact-dialog">Fortæl os om din idé ${arrow}</button></section>
-      <button class="next-project"><span><span class="eyebrow">NÆSTE INSPIRATION</span><span class="next-project-title"></span></span>${arrow}</button>
+      <button class="next-project"><span><span class="eyebrow">NÆSTE PROJEKT</span><span class="next-project-title"></span></span>${arrow}</button>
     </div>
   </dialog>
   <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="form-title">
@@ -194,7 +194,7 @@ function showProject(index) {
   const project = projects[projectIndex];
   gallery.querySelector('#project-title').textContent = project.title;
   gallery.querySelector('#project-kind').textContent = project.kind;
-  gallery.querySelector('.project-position').textContent = `INSPIRATION ${String(projectIndex + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
+  gallery.querySelector('.project-position').textContent = `PROJEKT ${String(projectIndex + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
   gallery.querySelector('#project-lead-text').textContent = project.lead;
   gallery.querySelector('#project-story-title').textContent = project.storyTitle;
   gallery.querySelector('#project-description').textContent = project.description;
@@ -215,10 +215,13 @@ function showProject(index) {
     button.addEventListener('click', () => showPhoto(index));
     return button;
   }));
-  const secondary = project.images[1] || project.images[0];
-  const secondaryImage = gallery.querySelector('.project-secondary img');
-  secondaryImage.src = secondary.src; secondaryImage.alt = secondary.alt;
-  gallery.querySelector('.project-secondary figcaption').textContent = secondary.caption;
+  gallery.querySelector('.project-photo-grid').replaceChildren(...project.images.slice(1).map(photo => {
+    const figure = document.createElement('figure'); figure.className = 'project-secondary';
+    const image = document.createElement('img');
+    image.src = photo.src; image.alt = photo.alt; image.width = 1086; image.height = 1448; image.loading = 'lazy';
+    const caption = document.createElement('figcaption'); caption.textContent = photo.caption;
+    figure.append(image, caption); return figure;
+  }));
   gallery.querySelector('.next-project-title').textContent = projects[(projectIndex + 1) % projects.length].title;
   showPhoto(0);
   gallery.scrollTop = 0;
