@@ -20,7 +20,8 @@ a { color: inherit; text-decoration: none; touch-action: manipulation; }
 img { display: block; max-width: 100%; }
 h1, h2, p, figure { margin: 0; }
 h1, h2 { font-weight: 400; }
-em { font-family: var(--serif); font-weight: 400; }
+/* Match Cormorant's lowercase height to Manrope's for an even visual size. */
+em { font-family: var(--serif); font-weight: 400; font-size: 1.36em; line-height: .8; }
 svg { width: 20px; height: 20px; flex-shrink: 0; }
 ::selection { background: #c8cbb9; }
 :focus-visible { outline: 2px solid #8a6b43; outline-offset: 6px; }
@@ -61,7 +62,7 @@ svg { width: 20px; height: 20px; flex-shrink: 0; }
 .hero .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #69795d; }
 h1 { font-size: clamp(58px, 7.25vw, 116px); line-height: 1.08; letter-spacing: -.06em; }
-h1 em { font-size: 1.17em; letter-spacing: -.055em; }
+h1 em { letter-spacing: -.055em; }
 .title-line { display: block; overflow: hidden; padding-bottom: 9px; }
 .title-line > span { display: block; animation: title-in 1.15s cubic-bezier(.2,.7,.2,1) both; }
 .title-line:nth-child(2) > span { animation-delay: .13s; }
@@ -84,7 +85,6 @@ figcaption { text-align: right; font-size: 8px; color: var(--muted); margin-top:
   gap: 35px;
 }
 .contact h2 { font-size: clamp(44px, 5vw, 70px); letter-spacing: -2.5px; line-height: 1.15; margin-top: 17px; }
-.contact h2 em { font-size: 1.18em; }
 .contact-description { color: var(--muted); font-size: 12px; line-height: 1.8; margin-top: 18px; }
 .contact-details { display: flex; flex-direction: column; align-items: flex-end; gap: 13px; }
 .phone-link { display: flex; align-items: center; gap: 25px; font-size: clamp(22px, 2.5vw, 35px); letter-spacing: -1px; }
@@ -153,7 +153,6 @@ button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulat
 .projects { margin-inline: 5.2%; padding-block: 52px 45px; border-bottom: 1px solid var(--line); }
 .projects-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 25px; margin-bottom: 27px; }
 .projects-heading h2 { font-size: clamp(32px, 3.4vw, 48px); letter-spacing: -1.8px; margin-top: 14px; }
-.projects-heading h2 em { font-size: 1.16em; }
 .project-count { font-size: 10px; color: var(--muted); letter-spacing: 1px; padding-bottom: 6px; }
 .project-grid { --project-height: clamp(340px, 40vw, 570px); display: flex; gap: 10px; height: var(--project-height); }
 .project-card, .project-slot { flex: 1 1 0; min-width: 0; position: relative; overflow: hidden; transition: flex-basis .6s cubic-bezier(.22,.7,.2,1), flex-grow .6s cubic-bezier(.22,.7,.2,1); }
@@ -206,7 +205,6 @@ body.dialog-open { overflow: hidden; }
 .project-disclaimer { margin: 22px 5.2% 44px; font-size: 9px; line-height: 1.8; color: var(--muted); }
 .project-contact { display: flex; justify-content: space-between; align-items: center; gap: 35px; background: #293c32; color: var(--paper); padding: 58px 5.2%; }
 .project-contact h3 { font-size: clamp(38px, 4.5vw, 66px); font-weight: 400; letter-spacing: -2.7px; line-height: 1.15; margin: 23px 0 0; max-width: 710px; }
-.project-contact h3 em { font-size: 1.15em; }
 .project-contact h3 + p { font-size: 12px; color: #c3cbb9; margin-top: 20px; line-height: 1.8; }
 .project-contact-button { background: none; border: 1px solid #a4b099; color: inherit; font-size: 12px; display: flex; align-items: center; gap: 25px; padding: 18px 23px; flex-shrink: 0; }
 .project-contact-button:hover { background: #ffffff12; }
@@ -265,7 +263,6 @@ body.dialog-open { overflow: hidden; }
 .contact-dialog-content { padding: 55px 5.2% 60px; display: grid; grid-template-columns: .8fr 1fr; gap: 9%; max-width: 1800px; margin-inline: auto; }
 .contact-dialog-intro { min-width: 0; }
 .contact-dialog-intro h2 { font-size: clamp(55px, 7vw, 99px); font-weight: 400; letter-spacing: -.055em; line-height: 1.07; margin-top: 27px; }
-.contact-dialog-intro h2 em { font-size: 1.2em; }
 .contact-dialog-intro > p:not(.eyebrow) { color: var(--muted); font-size: 12px; line-height: 1.9; margin-top: 26px; }
 .contact-dialog-call { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 55px; }
 .contact-dialog-call > .eyebrow { font-size: 7px; color: var(--muted); }
@@ -314,7 +311,6 @@ body.dialog-open { overflow: hidden; }
 .materials { margin-inline: 5.2%; padding-block: 48px 55px; border-bottom: 1px solid var(--line); }
 .materials-heading { margin-bottom: 30px; }
 .materials-heading h2 { font-size: clamp(34px, 3.6vw, 49px); letter-spacing: -1.7px; line-height: 1.15; margin-top: 15px; }
-.materials-heading h2 em { font-size: 1.18em; }
 .material-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 7%; align-items: center; }
 .material-preview { position: relative; aspect-ratio: 1; overflow: hidden; background: #c7b39a; }
 .material-preview > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
