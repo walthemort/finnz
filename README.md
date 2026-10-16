@@ -1,6 +1,6 @@
 # Finnz Træ & Design
 
-Dansk, responsiv præsentationsside bygget med Vite og almindelig JavaScript/CSS.
+En kort, dansk præsentationsside med ét hovedbudskab, ét stemningsbillede og direkte kontakt. Bygget med Vite og almindelig JavaScript/CSS.
 
 ## Lokal udvikling
 
@@ -27,19 +27,19 @@ Telefonnummeret er +45 41 35 20 25. Kopiér `.env.example` til `.env.local`, hvi
 
 Genstart udviklingsserveren efter ændringer i miljøvariabler. Kør et nyt build efter ændringer før publicering. VITE-variabler er offentlige klientværdier og må aldrig indeholde hemmeligheder.
 
-Kontaktformularen sender ikke data til en server. Uden en e-mailadresse kan besøgende forberede og kopiere deres forespørgsel, og siden viser telefonnummeret samt en e-mailpladsholder. Når `VITE_CONTACT_EMAIL` er sat, åbner formularen brugerens mailapp med en kladde. Brugeren sender selv e-mailen.
+Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. Siden har ingen formular, projektvinduer eller mobilmenu.
 
 ## Indhold og billeder
 
 - Original logopakke findes uændret under `public/brand/`.
-- Header og footer viser den originale `logo-black.svg` direkte og i dens oprindelige proportioner. Favicon bruger den originale `mark-dark.svg`, og den mørke sektion bruger `mark-light.svg`. Der er ingen genskabt logotekst eller hjemmelavet favicon.
+- Header og footer viser den originale `logo-black.svg` direkte og i dens oprindelige proportioner. Favicon bruger den originale `mark-dark.svg`. Der er ingen genskabt logotekst eller hjemmelavet favicon.
 - De fulde logofiler refererer til Amboy-fonten, som ikke er inkluderet i pakken. Browseren kan derfor vise teksten med en erstatningsfont. For præcis gengivelse på alle enheder skal virksomheden levere SVG med logoteksten konverteret til kurver (eller den originale font med weblicens). De vedhæftede filer er ikke ændret.
-- De to WebP-billeder under `public/images/` er genererede stemningsvisualiseringer, ikke dokumentation for udførte Finnz-opgaver. Siden oplyser dette.
-- Tekster og ydelseseksempler er foreløbige og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
+- Forsidens billede er en genereret stemningsvisualisering, ikke dokumentation for en udført Finnz-opgave. Siden oplyser dette. Det ekstra detaljebillede er bevaret som ubrugt ressource.
+- Den korte præsentationstekst er foreløbig og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
 - Ingen CVR, adresse, priser eller kundereferencer er opfundet.
 
 ## Kontrol
 
-Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, navigation, projektmodaler, formularvalidering, klargøring og kopiering af forespørgsel, telefonlink, Escape-lukning, billedindlæsning og kontrol af vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
+Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale logoer, billedindlæsning og kontrol af vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
 
 Hjemmesiden er ikke publiceret.
