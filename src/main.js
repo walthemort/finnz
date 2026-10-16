@@ -14,7 +14,7 @@ const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 document.querySelector('#app').innerHTML = `
   <header class="header" id="top">
     <a class="brand" href="#top" aria-label="Finnz Træ & Design, til toppen">${brand}</a>
-    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><a class="text-link" href="#kontakt">Lad os tale sammen ${arrow}</a></nav>
+    <nav aria-label="Hovednavigation"><a href="#projekter">Projekter & idéer</a><a href="#materialer">Materialer</a><button class="text-link" type="button" data-open-contact aria-haspopup="dialog">Skriv til os i dag ${arrow}</button></nav>
   </header>
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
@@ -35,7 +35,7 @@ document.querySelector('#app').innerHTML = `
       <div class="projects-heading"><div><p class="eyebrow">INSPIRATION I TRÆ</p><h2 id="projects-title">Form. Funktion. <em>Følelse.</em></h2></div><span class="project-count">01 — ${String(projects.length + 1).padStart(2, '0')}</span></div>
       <div class="project-grid">
         ${projects.map((project, index) => `<button class="project-card" data-project="${index}" aria-haspopup="dialog" aria-label="Se ${project.title.toLowerCase()}"><span class="project-image"><img src="${project.image}" alt="${project.alt}" width="1024" height="1024" loading="lazy"><span class="project-open">${arrow}</span></span><span class="project-meta"><span class="eyebrow">${project.kind}</span><span class="project-number">0${index + 1}</span></span><span class="project-title">${project.title}</span></button>`).join('')}
-        <a class="project-invite" href="#kontakt"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632" loading="lazy"><span>Det næste<br>kunne være <em>dit.</em></span><span class="invite-link">Lad os høre din idé ${arrow}</span></a>
+        <button class="project-invite" type="button" data-open-contact aria-haspopup="dialog"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632" loading="lazy"><span>Det næste<br>kunne være <em>dit.</em></span><span class="invite-link">Lad os høre din idé ${arrow}</span></button>
       </div>
       <p class="project-note">Billederne er stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
     </section>
@@ -44,24 +44,12 @@ document.querySelector('#app').innerHTML = `
       <div>
         <p class="eyebrow">LAD OS SKABE NOGET SAMMEN</p>
         <h2 id="contact-title">En idé <em>i træ?</em></h2>
-        <p class="contact-description">Giv os et kald. Så tager vi den derfra.</p>
+        <p class="contact-description">Giv os et kald, eller skriv et par ord om din idé.</p>
       </div>
       <div class="contact-details">
-        <a class="phone-link" id="contact-phone">${arrow}</a>
+        <a class="phone-link" id="contact-phone" data-contact-phone>${arrow}</a>
         <span class="email-placeholder">E-mail kommer snart</span>
-      </div>
-      <div class="contact-form-panel">
-        <div class="form-heading"><h3 id="form-title">Skriv til Finnz.</h3><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p></div>
-        <form id="contact-form" aria-labelledby="form-title">
-          <div class="form-material"><span class="eyebrow">DIT MATERIALEØNSKE</span><div><span id="material-summary">Vi finder materiale og overflade sammen.</span><a href="#materialer">Tilpas ↗</a></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
-          <div class="form-fields">
-            <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
-            <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
-          </div>
-          <label>Hvad har du i tankerne?<textarea name="message" rows="4" minlength="10" maxlength="4000" required placeholder="Fortæl lidt om din idé …"></textarea></label>
-          <div class="form-actions"><p>${contactEmail ? 'Du gennemser og sender selv beskeden i din mailapp.' : 'E-mailadressen er på vej. Du kan klargøre din besked her; den bliver ikke sendt.'}</p><button type="submit" class="form-submit">${contactEmail ? 'Åbn som e-mail' : 'Klargør besked'} ${arrow}</button></div>
-          <div class="form-result" hidden><p role="status"></p><textarea rows="6" readonly aria-label="Din klargjorte besked"></textarea><button type="button" class="text-link" id="copy-message">Kopiér beskeden ${arrow}</button></div>
-        </form>
+        <button class="contact-write" type="button" data-open-contact aria-haspopup="dialog">Skriv til os i dag ${arrow}</button>
       </div>
     </section>
   </main>
@@ -82,16 +70,33 @@ document.querySelector('#app').innerHTML = `
       <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
       <figure class="project-secondary"><img alt="" width="1536" height="1024" loading="lazy"><figcaption></figcaption></figure>
       <p class="project-disclaimer">Koncept & inspiration. Billederne er genererede stemningsvisualiseringer, ikke udførte Finnz-projekter.</p>
-      <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button">Fortæl os om din idé ${arrow}</button></section>
+      <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button" type="button" aria-haspopup="dialog" aria-controls="contact-dialog">Fortæl os om din idé ${arrow}</button></section>
       <button class="next-project"><span><span class="eyebrow">NÆSTE INSPIRATION</span><span class="next-project-title"></span></span>${arrow}</button>
+    </div>
+  </dialog>
+  <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="form-title">
+    <header class="project-header contact-header"><span class="brand">${brand}</span><span class="eyebrow project-position">KONTAKT</span><button class="dialog-close" aria-label="Luk kontaktformular"><span>Luk kontakt</span><span aria-hidden="true">×</span></button></header>
+    <div class="contact-dialog-content">
+      <div class="contact-dialog-intro"><p class="eyebrow">SKRIV TIL OS I DAG</p><h2 id="form-title">Fortæl om<br>din <em>idé.</em></h2><p>En løs tanke eller en konkret idé.<br>Et par ord er et godt sted at starte.</p><div class="contact-dialog-call"><span class="eyebrow">HELLERE EN SAMTALE?</span><a data-contact-phone>${arrow}</a></div></div>
+        <form id="contact-form" aria-labelledby="form-title">
+          <div class="form-material"><span class="eyebrow">DIT MATERIALEØNSKE</span><div><span id="material-summary">Vi finder materiale og overflade sammen.</span><button class="material-edit" type="button">Tilpas ↗</button></div><input type="hidden" name="material"><input type="hidden" name="finish"></div>
+          <div class="form-fields">
+            <label>Dit navn<input name="name" autocomplete="name" maxlength="100" required placeholder="Navn"></label>
+            <label>Din e-mail<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="dig@eksempel.dk"></label>
+          </div>
+          <label>Hvad har du i tankerne?<textarea name="message" rows="4" minlength="10" maxlength="4000" required placeholder="Fortæl lidt om din idé …"></textarea></label>
+          <div class="form-actions"><p>${contactEmail ? 'Du gennemser og sender selv beskeden i din mailapp.' : 'E-mailadressen er på vej. Du kan klargøre din besked her; den bliver ikke sendt.'}</p><button type="submit" class="form-submit">${contactEmail ? 'Åbn som e-mail' : 'Klargør besked'} ${arrow}</button></div>
+          <div class="form-result" hidden><p role="status"></p><textarea rows="6" readonly aria-label="Din klargjorte besked"></textarea><button type="button" class="text-link" id="copy-message">Kopiér beskeden ${arrow}</button></div>
+        </form>
     </div>
   </dialog>
   <div class="brand-cursor" aria-hidden="true"><img src="/brand/mark-outlined.webp" alt="" width="449" height="632"></div>
 `;
 
-const phone = document.querySelector('#contact-phone');
-phone.href = `tel:${contactPhone.replace(/[^+\d]/g, '')}`;
-phone.prepend(document.createTextNode(contactPhone));
+document.querySelectorAll('[data-contact-phone]').forEach(phone => {
+  phone.href = `tel:${contactPhone.replace(/[^+\d]/g, '')}`;
+  phone.prepend(document.createTextNode(contactPhone));
+});
 
 if (contactEmail) {
   const email = document.createElement('a');
@@ -115,7 +120,47 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 const gallery = document.querySelector('#project-dialog');
 let projectIndex = 0;
 let photoIndex = 0;
-let contactRequested = false;
+const contactDialog = document.querySelector('#contact-dialog');
+let returnToMaterials = false;
+function syncDialogs() {
+  const topDialog = contactDialog.open ? contactDialog : gallery.open ? gallery : null;
+  document.body.classList.toggle('dialog-open', Boolean(topDialog));
+  (topDialog || document.body).append(cursor);
+}
+function openContact({ project = null } = {}) {
+  if (contactDialog.open) return;
+  const message = document.querySelector('[name="message"]');
+  if (project && !message.value.trim()) {
+    message.value = `Jeg er inspireret af “${project.title}” og vil gerne høre om en lignende løsning.\n\nMin idé: `;
+    message.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  contactDialog.showModal();
+  contactDialog.scrollTop = 0;
+  syncDialogs();
+  const name = document.querySelector('[name="name"]');
+  const email = document.querySelector('[name="email"]');
+  (name.value.trim() ? email.value.trim() ? message : email : name).focus({ preventScroll: true });
+}
+document.querySelectorAll('[data-open-contact]').forEach(button => {
+  button.setAttribute('aria-controls', 'contact-dialog');
+  button.addEventListener('click', () => openContact());
+});
+contactDialog.querySelector('.dialog-close').addEventListener('click', () => contactDialog.close());
+contactDialog.querySelector('.material-edit').addEventListener('click', () => {
+  returnToMaterials = true;
+  contactDialog.close();
+});
+contactDialog.addEventListener('close', () => {
+  syncDialogs();
+  if (!returnToMaterials) return;
+  returnToMaterials = false;
+  if (gallery.open) gallery.close();
+  requestAnimationFrame(() => {
+    document.querySelector('#materialer').scrollIntoView({ behavior: reducedMotion() ? 'instant' : 'smooth', block: 'start' });
+    const option = document.querySelector('[name="wood"]:checked') || document.querySelector('[name="wood"]');
+    option.focus({ preventScroll: true });
+  });
+});
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 function showPhoto(index) {
   const project = projects[projectIndex];
@@ -168,8 +213,7 @@ document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
     showProject(Number(button.dataset.project));
     gallery.showModal();
-    gallery.append(cursor);
-    document.body.classList.add('dialog-open');
+    syncDialogs();
     gallery.scrollTop = 0;
   });
 });
@@ -181,25 +225,9 @@ gallery.querySelector('.next-project').addEventListener('click', () => {
   gallery.querySelector('.dialog-close').focus({ preventScroll: true });
 });
 gallery.querySelector('.project-contact-button').addEventListener('click', () => {
-  contactRequested = true;
-  gallery.close();
+  openContact({ project: projects[projectIndex] });
 });
-gallery.addEventListener('close', () => {
-  document.body.classList.remove('dialog-open');
-  document.body.append(cursor);
-  if (!contactRequested) return;
-  contactRequested = false;
-  const message = document.querySelector('[name="message"]');
-  if (!message.value.trim()) {
-    message.value = `Jeg er inspireret af “${projects[projectIndex].title}” og vil gerne høre om en lignende løsning.\n\nMin idé: `;
-    message.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-  requestAnimationFrame(() => {
-    document.querySelector('#kontakt').scrollIntoView({ behavior: reducedMotion() ? 'instant' : 'smooth', block: 'start' });
-    const name = document.querySelector('[name="name"]');
-    (name.value.trim() ? message : name).focus({ preventScroll: true });
-  });
-});
+gallery.addEventListener('close', syncDialogs);
 gallery.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault();
@@ -275,7 +303,7 @@ setupMaterialSelector(({ material, finish }) => {
     : `${material === 'Afklares sammen' ? 'Træsort afklares sammen' : material} · ${finish === 'Afklares sammen' ? 'Overflade afklares sammen' : finish}`;
   result.hidden = true;
   copyMessage.innerHTML = `Kopiér beskeden ${arrow}`;
-});
+}, () => openContact());
 
 // A visible branded intro on every page load, including cached reloads.
 function startIntro() {

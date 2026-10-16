@@ -27,7 +27,7 @@ Telefonnummeret er +45 41 35 20 25. Kopiér `.env.example` til `.env.local`, hvi
 
 Genstart udviklingsserveren efter ændringer i miljøvariabler. Kør et nyt build efter ændringer før publicering. VITE-variabler er offentlige klientværdier og må aldrig indeholde hemmeligheder.
 
-Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. Kontaktformularen er altid synlig i kontaktsektionen. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Inspirationskort åbner en fuldskærmsside med to billeder, tekst, materialefakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og thumbnails; på mobil kan projektrækken swipes.
+Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. “Skriv til os i dag” åbner kontaktformularen i et fuldskærmsvindue på samme side. Formularen fylder ikke på forsiden. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Inspirationskort åbner et fuldskærmsvindue på samme side med to billeder, tekst, materialefakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og thumbnails; på mobil kan projektrækken swipes.
 
 ## Indhold og billeder
 
@@ -51,10 +51,16 @@ Introen ligger direkte i HTML og vises ved hver indlæsning, også ved genindlæ
 
 ## Projektvisning
 
-Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver altid adgang til lukning; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” går til den synlige kontaktformular og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
+Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Fast topbjælke giver altid adgang til lukning; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste inspiration” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
 
 ## Kontrol
 
-Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale WebP-logoer, faviconets billedproportioner ved 16/32/64 px, introens parathed/timeout/genbesøg/reduceret bevægelse, formularens synlighed, validering og kopiering samt materialevalg, nulstilling og overførsel til beskeden, mus/touch/reduced-motion cursor, galleriets knapper, tastatur og Escape, mobilrækkens swipe samt billedindlæsning og vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
+Build er kontrolleret med `npm run build`. Browserkontrol i Chromium omfatter desktop/mobil, kontaktanker, telefonlink, e-mailpladsholder, originale WebP-logoer, faviconets billedproportioner ved 16/32/64 px, introens parathed/timeout/genbesøg/reduceret bevægelse, kontaktvinduets fuldskærmslayout, fokus og Escape-lukning, formularens validering og kopiering samt materialevalg, nulstilling og overførsel til beskeden, mus/touch/reduced-motion cursor, galleriets knapper, tastatur og Escape, mobilrækkens swipe samt billedindlæsning og vandret overflow. Animationer tager hensyn til `prefers-reduced-motion`.
 
 Hjemmesiden er ikke publiceret.
+
+## Kontaktvindue og navigation
+
+Alle kontaktknapper åbner det samme native `dialog`: header, kontaktsektion, inspirationsfelt, materialevælger og projekt-CTA. Der er ingen ekstra HTML-sider eller router. Kontaktvinduet og projektvinduet er overlays på forsiden, og åbning/lukning ændrer ikke URL'en.
+
+Når kontakt åbnes fra et projekt, forbliver projektvinduet nedenunder. Lukning/Escape vender tilbage til projektet og den knap, der åbnede formularen. “Tilpas” i formularen lukker begge vinduer og fokuserer materialevælgeren på forsiden. Navn, e-mail, besked og materialeønske bevares ved lukning, genåbning og vinduesskift. Body-scroll og F-cursorens placering følger det øverste åbne vindue.

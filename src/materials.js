@@ -14,14 +14,14 @@ export function materialSelectorMarkup(arrow) {
         <fieldset class="wood-options"><legend>Hvilken træsort taler til dig?</legend><div class="wood-swatches">${materials.map(material => `<label class="wood-option"><input type="radio" name="wood" value="${material.id}"><span class="wood-swatch" style="--wood-color:${material.color}" aria-hidden="true"></span><span>${material.name}</span></label>`).join('')}</div></fieldset>
         <p class="material-description" aria-live="polite">Prøv en træsort, og se, hvordan udtrykket ændrer sig.</p>
         <label class="finish-label" for="material-finish">Overfladeønske<select id="material-finish">${finishes.map(finish => `<option>${finish}</option>`).join('')}</select></label>
-        <div class="material-actions"><a class="text-link material-apply" href="#kontakt">Tal med os om dit valg ${arrow}</a><button class="material-reset" type="button">Jeg vælger senere</button></div>
+        <div class="material-actions"><button class="text-link material-apply" type="button" aria-haspopup="dialog">Tal med os om dit valg ${arrow}</button><button class="material-reset" type="button">Jeg vælger senere</button></div>
         <p class="material-note">Vejledende visualiseringer. Træsort, farve og overflade aftales individuelt.</p>
       </div>
     </div>
   </section>`;
 }
 
-export function setupMaterialSelector(onChange) {
+export function setupMaterialSelector(onChange, onContact) {
   const section = document.querySelector('#materialer');
   const preview = section.querySelector('#material-image');
   const caption = section.querySelector('#material-caption');
@@ -55,11 +55,6 @@ export function setupMaterialSelector(onChange) {
     description.textContent = 'Du behøver ikke vælge nu. Vi finder materialet sammen.';
     update();
   });
-  section.querySelector('.material-apply').addEventListener('click', event => {
-    event.preventDefault();
-    document.querySelector('#kontakt').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
-    const name = document.querySelector('#contact-form [name="name"]');
-    name.focus({ preventScroll: true });
-  });
+  section.querySelector('.material-apply').addEventListener('click', () => onContact());
   update();
 }

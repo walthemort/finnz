@@ -178,9 +178,9 @@ button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulat
 .project-note { color: var(--muted); font-size: 9px; line-height: 1.8; margin-top: 20px; }
 body.dialog-open { overflow: hidden; }
 /* The native dialog is a full project page, not a floating card. */
-.project-dialog { position: fixed; inset: 0; margin: 0; border: 0; padding: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; background: var(--paper); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
-.project-dialog::backdrop { background: var(--paper); }
-.project-dialog[open] { animation: project-page-in .4s ease both; }
+.project-dialog, .contact-dialog { position: fixed; inset: 0; margin: 0; border: 0; padding: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; background: var(--paper); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+.project-dialog::backdrop, .contact-dialog::backdrop { background: var(--paper); }
+.project-dialog[open], .contact-dialog[open] { animation: project-page-in .4s ease both; }
 .project-header { position: sticky; top: 0; z-index: 3; height: 88px; padding-inline: 5.2%; display: flex; align-items: center; justify-content: space-between; gap: 24px; background: #f5f3edf2; backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .project-header .brand-logo { width: 120px; }
 .project-position { color: var(--muted); }
@@ -275,16 +275,27 @@ body.dialog-open { overflow: hidden; }
   .next-project > svg { width: 25px; height: 25px; }
 }
 
-/* The contact form stays visible, with the material preference beside the fields. */
+/* Contact opens as a full-screen overlay on the same page. */
 .contact { flex-wrap: wrap; }
-.contact-form-panel { flex-basis: 100%; border-top: 1px solid var(--line); margin-top: 5px; padding-top: 35px; display: grid; grid-template-columns: .65fr 1fr; gap: 8%; }
-.form-heading h3 { font-size: 32px; font-weight: 400; letter-spacing: -1px; margin: 0; }
-.form-heading p { color: var(--muted); font-size: 12px; line-height: 1.9; margin-top: 16px; }
+.header nav .text-link { background: none; border: 0; }
+.project-invite { border: 0; text-align: left; }
+.contact-write { display: inline-flex; align-items: center; gap: 30px; background: #293c32; color: var(--paper); border: 0; padding: 17px 23px; margin-top: 10px; font-size: 12px; }
+.contact-write:hover { background: #3d5344; }
+.contact-write svg { width: 18px; height: 18px; }
+.contact-dialog-content { padding: 55px 5.2% 60px; display: grid; grid-template-columns: .8fr 1fr; gap: 9%; max-width: 1800px; margin-inline: auto; }
+.contact-dialog-intro { min-width: 0; }
+.contact-dialog-intro h2 { font-size: clamp(55px, 7vw, 99px); font-weight: 400; letter-spacing: -.055em; line-height: 1.07; margin-top: 27px; }
+.contact-dialog-intro h2 em { font-size: 1.2em; }
+.contact-dialog-intro > p:not(.eyebrow) { color: var(--muted); font-size: 12px; line-height: 1.9; margin-top: 26px; }
+.contact-dialog-call { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 55px; }
+.contact-dialog-call > .eyebrow { font-size: 7px; color: var(--muted); }
+.contact-dialog-call > a { display: inline-flex; align-items: center; gap: 25px; font-size: 23px; letter-spacing: -.6px; }
+.contact-dialog-call > a svg { width: 19px; height: 19px; }
 #contact-form { min-width: 0; }
 .form-material { background: #e6e7db; padding: 17px 20px; margin-bottom: 24px; }
 .form-material > .eyebrow { font-size: 7px; color: var(--muted); }
 .form-material > div { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-top: 10px; font-size: 11px; line-height: 1.8; }
-.form-material a { flex-shrink: 0; font-size: 10px; text-decoration: underline; text-underline-offset: 4px; }
+.material-edit { background: none; border: 0; padding: 0; flex-shrink: 0; font-size: 10px; color: inherit; text-decoration: underline; text-underline-offset: 4px; }
 .form-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 #contact-form label { display: block; font-size: 11px; margin-bottom: 21px; }
 #contact-form input, #contact-form textarea { display: block; width: 100%; border: 1px solid #bfc5b5; background: transparent; border-radius: 0; color: var(--ink); font: inherit; font-size: 13px; line-height: 1.7; margin-top: 10px; padding: 12px 14px; }
@@ -308,9 +319,7 @@ body.dialog-open { overflow: hidden; }
 .is-intro .title-line > span, .is-intro .intro-reveal, .is-intro .hero-image { animation-play-state: paused; }
 @keyframes intro-progress { from { transform: translateX(-100%); } to { transform: translateX(330%); } }
 @media (max-width: 700px) {
-  .contact-form-panel { width: 100%; margin-top: 0; grid-template-columns: 1fr; gap: 25px; padding-top: 29px; }
-  .form-heading h3 { font-size: 28px; }
-  .form-heading p { font-size: 11px; margin-top: 12px; }
+  .contact-write { font-size: 11px; padding: 15px 20px; }
   .form-material { padding: 15px; }
   .form-material > div { font-size: 10px; gap: 12px; }
   .form-fields { grid-template-columns: 1fr; gap: 0; }
@@ -362,4 +371,13 @@ body.dialog-open { overflow: hidden; }
 }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .has-brand-cursor .wood-option { cursor: none; }
+}
+
+.material-apply { background: none; border: 0; border-bottom: 1px solid #b9beaf; padding-left: 0; padding-right: 0; }
+@media (max-width: 900px) {
+  .contact-dialog-content { grid-template-columns: 1fr; gap: 31px; padding: 34px 6% 40px; }
+  .contact-dialog-intro h2 { font-size: clamp(47px, 13vw, 76px); margin-top: 21px; }
+  .contact-dialog-intro > p:not(.eyebrow) { font-size: 11px; margin-top: 19px; }
+  .contact-dialog-call { margin-top: 24px; gap: 10px; }
+  .contact-dialog-call > a { font-size: 21px; }
 }
