@@ -44,7 +44,7 @@ export function setupPageNavigation() {
     if (motion.matches) hero.style.removeProperty('--hero-offset');
     else if (heroVisible) {
       const box = hero.getBoundingClientRect();
-      const offset = Math.max(-28, Math.min(28, (innerHeight / 2 - box.top - box.height / 2) * .055));
+      const offset = Math.max(-90, Math.min(90, (innerHeight / 2 - box.top - box.height / 2) * .18));
       hero.style.setProperty('--hero-offset', `${offset.toFixed(2)}px`);
     }
   }
