@@ -32,7 +32,8 @@ Kontaktformularen sender ikke data til en server. Uden en e-mailadresse kan bes�
 ## Indhold og billeder
 
 - Original logopakke findes uændret under `public/brand/`.
-- Logofilerne indeholder tekst, som refererer til Amboy-fonten; denne font er ikke inkluderet i pakken. Navigationens logovisning bruger det originale symbol med en separat tekstbehandling. Få gerne leveret et endeligt logo med tekst konverteret til kurver.
+- Header og footer viser den originale `logo-black.svg` direkte og i dens oprindelige proportioner. Favicon bruger den originale `mark-dark.svg`, og den mørke sektion bruger `mark-light.svg`. Der er ingen genskabt logotekst eller hjemmelavet favicon.
+- De fulde logofiler refererer til Amboy-fonten, som ikke er inkluderet i pakken. Browseren kan derfor vise teksten med en erstatningsfont. For præcis gengivelse på alle enheder skal virksomheden levere SVG med logoteksten konverteret til kurver (eller den originale font med weblicens). De vedhæftede filer er ikke ændret.
 - De to WebP-billeder under `public/images/` er genererede stemningsvisualiseringer, ikke dokumentation for udførte Finnz-opgaver. Siden oplyser dette.
 - Tekster og ydelseseksempler er foreløbige og skal bekræftes af virksomheden inden lancering. Den eksisterende hjemmeside kunne ikke læses fra cloudmiljøet (netværkspolitikken returnerede HTTP 403).
 - Ingen CVR, adresse, priser eller kundereferencer er opfundet.

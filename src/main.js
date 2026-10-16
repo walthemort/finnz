@@ -7,7 +7,7 @@ import '@fontsource/cormorant-garamond/latin-400-italic.css';
 import './style.css';
 
 const arrow = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.4"/></svg>';
-const brand = `<span class="brand-symbol"><img src="/brand/logo-black.svg" alt="" width="135" height="48"></span><span class="brand-name">FINNZ<span>TRÆ & DESIGN</span></span>`;
+const brand = `<img class="brand-logo" src="/brand/logo-black.svg" alt="Finnz" width="924.8" height="329.72">`;
 const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || '';
 const contactPhone = import.meta.env.VITE_CONTACT_PHONE || '+45 41 35 20 25';
 
