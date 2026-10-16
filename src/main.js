@@ -66,10 +66,11 @@ document.querySelector('#app').innerHTML = `
     </header>
     <div class="project-page">
       <section class="project-lead"><p class="eyebrow" id="project-kind"></p><h2 id="project-title"></h2><p id="project-lead-text"></p></section>
-      <div class="project-cover"><img class="dialog-image" alt="" width="1086" height="1448"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div>
-      <div class="project-gallery-bar"><p class="image-caption"></p><div class="project-thumbnails" aria-label="Vælg projektbillede"></div></div>
+      <div class="project-gallery">
+        <div class="project-primary"><div class="project-cover"><img class="dialog-image" alt="" width="1086" height="1448"><div class="gallery-controls"><button class="gallery-prev" aria-label="Forrige billede">←</button><span class="gallery-count" aria-live="polite"></span><button class="gallery-next" aria-label="Næste billede">→</button></div></div><p class="image-caption" aria-live="polite"></p></div>
+        <div class="project-photo-grid" role="group" aria-label="Se de øvrige projektbilleder"></div>
+      </div>
       <section class="project-story"><div><p class="eyebrow">IDÉ & UDTRYK</p><h3 id="project-story-title"></h3></div><div><p id="project-description"></p><dl class="project-facts"></dl></div></section>
-      <div class="project-photo-grid"></div>
       <p class="project-disclaimer">Fotografier af et udført Finnz-projekt, redigeret med AI.</p>
       <section class="project-contact"><div><p class="eyebrow">LAD OS FINDE DIT UDTRYK</p><h3>Ønsker du noget <em>lignende?</em></h3><p>Vi tager udgangspunkt i din idé og dit rum.</p></div><button class="project-contact-button" type="button" aria-haspopup="dialog" aria-controls="contact-dialog">Fortæl os om din idé ${arrow}</button></section>
       <button class="next-project"><span><span class="eyebrow">NÆSTE PROJEKT</span><span class="next-project-title"></span></span>${arrow}</button>
@@ -185,8 +186,14 @@ function showPhoto(index) {
   image.alt = photo.alt;
   gallery.querySelector('.image-caption').textContent = photo.caption;
   gallery.querySelector('.gallery-count').textContent = `${photoIndex + 1} / ${project.images.length}`;
-  gallery.querySelectorAll('[data-photo]').forEach(button => {
-    button.setAttribute('aria-pressed', String(Number(button.dataset.photo) === photoIndex));
+  const otherPhotos = project.images.map((photo, index) => ({ ...photo, index })).filter(photo => photo.index !== photoIndex);
+  gallery.querySelectorAll('[data-photo]').forEach((button, index) => {
+    const photo = otherPhotos[index];
+    button.dataset.photo = photo.index;
+    button.setAttribute('aria-label', `Vis billede ${photo.index + 1}: ${photo.caption}`);
+    const preview = button.querySelector('img');
+    preview.src = photo.src; preview.alt = photo.alt;
+    button.querySelector('.secondary-caption').textContent = photo.caption;
   });
 }
 function showProject(index) {
@@ -205,22 +212,14 @@ function showProject(index) {
     const dd = document.createElement('dd'); dd.textContent = value;
     row.append(dt, dd); return row;
   }));
-  const thumbnails = gallery.querySelector('.project-thumbnails');
-  thumbnails.replaceChildren(...project.images.map((photo, index) => {
+  gallery.querySelector('.project-photo-grid').replaceChildren(...project.images.slice(1).map(() => {
     const button = document.createElement('button');
-    button.dataset.photo = index;
-    button.setAttribute('aria-label', `Vis billede ${index + 1}: ${photo.caption}`);
-    const image = document.createElement('img'); image.src = photo.src; image.alt = '';
-    image.width = 84; image.height = 58; button.append(image);
-    button.addEventListener('click', () => showPhoto(index));
+    button.type = 'button'; button.className = 'project-secondary'; button.dataset.photo = '';
+    const image = document.createElement('img'); image.width = 1086; image.height = 1448;
+    const caption = document.createElement('span'); caption.className = 'secondary-caption';
+    button.append(image, caption);
+    button.addEventListener('click', () => showPhoto(Number(button.dataset.photo)));
     return button;
-  }));
-  gallery.querySelector('.project-photo-grid').replaceChildren(...project.images.slice(1).map(photo => {
-    const figure = document.createElement('figure'); figure.className = 'project-secondary';
-    const image = document.createElement('img');
-    image.src = photo.src; image.alt = photo.alt; image.width = 1086; image.height = 1448; image.loading = 'lazy';
-    const caption = document.createElement('figcaption'); caption.textContent = photo.caption;
-    figure.append(image, caption); return figure;
   }));
   gallery.querySelector('.next-project-title').textContent = projects[(projectIndex + 1) % projects.length].title;
   showPhoto(0);

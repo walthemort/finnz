@@ -27,7 +27,7 @@ Telefonnummeret er +45 41 35 20 25. Kopiér `.env.example` til `.env.local`, hvi
 
 Genstart udviklingsserveren efter ændringer i miljøvariabler. Kør et nyt build efter ændringer før publicering. VITE-variabler er offentlige klientværdier og må aldrig indeholde hemmeligheder.
 
-Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. “Skriv til os i dag” åbner kontaktformularen i et fuldskærmsvindue på samme side. Formularen fylder ikke på forsiden. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Projektkort åbner et fuldskærmsvindue på samme side med tre billeder, tekst, projektfakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og thumbnails; på mobil kan projektrækken swipes.
+Kontakt foregår direkte via telefonlinket. E-mail vises som pladsholder, indtil `VITE_CONTACT_EMAIL` er sat; derefter vises et almindeligt mailto-link. “Skriv til os i dag” åbner kontaktformularen i et fuldskærmsvindue på samme side. Formularen fylder ikke på forsiden. Den klargør og kopierer beskeder, indtil e-mailadressen er kendt. Med `VITE_CONTACT_EMAIL` åbner den en e-mailkladde i brugerens mailapp; der er ingen serverafsendelse eller leveringsbekræftelse. Siden har ingen mobilmenu. Projektkort åbner et fuldskærmsvindue på samme side med tre billeder, tekst, projektfakta og kontakt-CTA. Billedvælgeren kan betjenes med piletaster og de øvrige billedvinkler; på mobil kan projektrækken swipes.
 
 ## Indhold og billeder
 
@@ -52,7 +52,7 @@ Introen ligger direkte i HTML og vises ved hver indlæsning, også ved genindlæ
 
 ## Projektvisning
 
-Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Portrætfotos vises i fuldt format, med to supplerende vinkler længere nede. Fast topbjælke giver adgang til lukning via både det originale logo og “Luk projekt”; Escape gendanner fokus på projektkortet. Pilknapper, thumbnails og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste projekt” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
+Fuldskærmsvisningen kan scrolles uafhængigt af forsiden. Portrætfotos vises i fuldt format i et kompakt galleri: på desktop står det valgte billede lidt større til venstre, og de to øvrige vinkler står ved siden af. På mobil/tablet ligger de to mindre billeder samlet under hovedbilledet. Klik på en anden vinkel bytter den med hovedbilledet, så alle tre billeder fortsat er synlige uden gentagelser. Fast topbjælke giver adgang til lukning via både det originale logo og “Luk projekt”; Escape gendanner fokus på projektkortet. Pilknapper, de to øvrige billedvinkler og tastaturets piletaster skifter billeder inden for det valgte projekt. “Næste projekt” skifter projekt. CTA’en “Ønsker du noget lignende?” åbner kontaktvinduet oven på projektvisningen og indsætter en projektreference, hvis beskedfeltet er tomt. Allerede indtastede oplysninger bevares.
 
 ## Kontrol
 
